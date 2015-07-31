@@ -32,13 +32,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.easemob.applib.controller.HXSDKHelper;
-import com.easemob.applib.utils.HXPreferenceUtils;
-import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.adapter.GroupAdapter;
-import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 
 public class GroupsActivity extends BaseActivity {

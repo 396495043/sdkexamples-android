@@ -13,6 +13,8 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.sky.util.DataUtil;
 
 /**
  * 开屏页
@@ -44,7 +46,8 @@ public class SplashActivity extends BaseActivity {
 
 		new Thread(new Runnable() {
 			public void run() {
-				if (DemoHXSDKHelper.getInstance().isLogined()) {
+				//SKYMODIFY  forbid old hx  login
+				if (DemoHXSDKHelper.getInstance().isLogined() && SkyUserManager.getInstances().isAllowHxAutoLogin()) {
 					// ** 免登陆情况 加载所有本地群和会话
 					//不是必须的，不加sdk也会自动异步去加载(不会重复加载)；
 					//加上的话保证进了主页面会话和群组都已经load完毕
@@ -68,7 +71,10 @@ public class SplashActivity extends BaseActivity {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+					//SKYMODIFY aoto login
+					Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+					intent.putExtra(DataUtil.IntentKey, "auto");
+                    startActivity(intent);
 					finish();
 				}
 			}

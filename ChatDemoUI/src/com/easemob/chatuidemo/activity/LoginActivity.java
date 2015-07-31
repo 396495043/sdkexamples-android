@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -33,6 +36,7 @@ import android.widget.Toast;
 
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
@@ -41,6 +45,14 @@ import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.db.UserDao;
 import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.utils.CommonUtils;
+import com.easemob.exceptions.EaseMobException;
+import com.skytech.chatim.proxy.RetrofitClient;
+import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.proxy.SkyUtil;
+import com.skytech.chatim.sky.retrofit.ServerInterface;
+import com.skytech.chatim.sky.util.AndroidUtil;
+import com.skytech.chatim.sky.util.DataUtil;
+import com.skytech.chatim.sky.vo.LoginEasemobResponse;
 
 /**
  * 登陆页面
@@ -63,7 +75,8 @@ public class LoginActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 
 		// 如果用户名密码都有，直接进入主页面
-		if (DemoHXSDKHelper.getInstance().isLogined()) {
+		//SKYMODIFY forbid old hx  login
+		if (DemoHXSDKHelper.getInstance().isLogined() && SkyUserManager.getInstances().isAllowHxAutoLogin()) {
 			autoLogin = true;
 			startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
@@ -78,7 +91,7 @@ public class LoginActivity extends BaseActivity {
 		usernameEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				passwordEditText.setText(null);
+				//passwordEditText.setText(null);
 			}
 
 			@Override
@@ -94,6 +107,20 @@ public class LoginActivity extends BaseActivity {
 		if (DemoApplication.getInstance().getUserName() != null) {
 			usernameEditText.setText(DemoApplication.getInstance().getUserName());
 		}
+		
+		//SKYMODIFY aoto login 
+		usernameEditText.setText(SkyUserManager.getInstances().getUserName());
+		passwordEditText.setText(SkyUserManager.getInstances().getPassword());
+		
+		if (getIntent().getStringExtra(DataUtil.IntentKey)!=null){     
+		    // cong splashActivity 自动登录
+		    currentUsername = usernameEditText.getText().toString().trim();
+	        currentPassword = passwordEditText.getText().toString().trim();
+	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
+	            login(null); 
+	        }
+		}
+
 	}
 
 	/**
@@ -132,8 +159,40 @@ public class LoginActivity extends BaseActivity {
 		pd.show();
 
 		final long start = System.currentTimeMillis();
+
+
+		//SKYMODIFY two step login ,you need login sky first ,then you get hx userID to login hx .
+		final ServerInterface serverInterface = RetrofitClient.getServerInterface();
+		 Log.d(TAG," login  currentUsername " + currentUsername) ;
+		serverInterface.loginEasemob(currentUsername, currentPassword, new Callback<LoginEasemobResponse>(){
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG," login  error" + error ) ;
+                AndroidUtil.showToast(LoginActivity.this, R.string.login_error);
+                pd.dismiss();
+            }
+
+            @Override
+            public void success(LoginEasemobResponse loginResponse , Response arg1) {
+                Log.d(TAG," login  loginResponse" + loginResponse ) ;
+                SkyUserManager.getInstances().setToken(loginResponse.getResult().getToken());
+                SkyUserManager.getInstances().setSkyUser(loginResponse.getResult());
+                hxUserName = loginResponse.getResult().getUid();
+                hxPassword =loginResponse.getResult().getPassword();
+                hxLogin(pd);
+            }
+		    });
+	}
+
+	private String hxUserName ;
+	private String hxPassword ;	
+	// spit two step to login
+	protected void hxLogin(final ProgressDialog pd) {
+			
+
 		// 调用sdk登陆方法登陆聊天服务器
-		EMChatManager.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+		EMChatManager.getInstance().login(hxUserName, hxPassword, new EMCallBack() {
 
 			@Override
 			public void onSuccess() {
@@ -143,7 +202,8 @@ public class LoginActivity extends BaseActivity {
 				// 登陆成功，保存用户名密码
 				DemoApplication.getInstance().setUserName(currentUsername);
 				DemoApplication.getInstance().setPassword(currentPassword);
-
+             	//SKYMODIFY
+ 				SkyUserManager.getInstances().save(currentUsername,currentPassword);
 				try {
 					// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
 					// ** manually load all local groups and
@@ -200,8 +260,27 @@ public class LoginActivity extends BaseActivity {
 		});
 	}
 
+
+
 	private void initializeContacts() {
+		//SKYMODIFY  以前 demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
+		// 现在还用以前的设定
+		List<String> usernames = new ArrayList<String>();
+		try {
+			usernames = EMContactManager.getInstance().getContactUserNames();
+		} catch (EaseMobException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.d("roster", "contacts size: " + usernames.size());
 		Map<String, User> userlist = new HashMap<String, User>();
+		for (String username : usernames) {
+			User user = new User();
+			//nickName 缺省也是用的是 username
+			user.setUsername(username);
+			userlist.put(username, user);
+		}
+		
 		// 添加user"申请与通知"
 		User newFriends = new User();
 		newFriends.setUsername(Constant.NEW_FRIENDS_USERNAME);
@@ -219,18 +298,23 @@ public class LoginActivity extends BaseActivity {
 		userlist.put(Constant.GROUP_USERNAME, groupUser);
 		
 		// 添加"Robot"
-		User robotUser = new User();
-		String strRobot = getResources().getString(R.string.robot_chat);
-		robotUser.setUsername(Constant.CHAT_ROBOT);
-		robotUser.setNick(strRobot);
-		robotUser.setHeader("");
-		userlist.put(Constant.CHAT_ROBOT, robotUser);
+		//SKYMODIFY not use robot 
+//		User robotUser = new User();
+//		String strRobot = getResources().getString(R.string.robot_chat);
+//		robotUser.setUsername(Constant.CHAT_ROBOT);
+//		robotUser.setNick(strRobot);
+//		robotUser.setHeader("");
+//		userlist.put(Constant.CHAT_ROBOT, robotUser);
 		
 		// 存入内存
 		DemoApplication.getInstance().setContactList(userlist);
 		// 存入db
 		UserDao dao = new UserDao(LoginActivity.this);
 		List<User> users = new ArrayList<User>(userlist.values());
+		//SKYMODIFY
+		SkyUserManager.getInstances().updateUserFromDB(this,userlist);
+		SkyUserManager.getInstances().fisrtGetInfo(this,userlist);
+	
 		dao.saveContactList(users);
 	}
 	
@@ -240,7 +324,8 @@ public class LoginActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void register(View view) {
-		startActivityForResult(new Intent(this, RegisterActivity.class), 0);
+	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n用户名，邮箱@前的字符串，比如张军，jun.z，密码Pass1234");
+		//startActivityForResult(new Intent(this, RegisterActivity.class), 0);
 	}
 
 	@Override

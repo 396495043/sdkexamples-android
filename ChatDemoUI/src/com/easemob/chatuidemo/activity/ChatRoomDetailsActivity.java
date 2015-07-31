@@ -15,13 +15,11 @@ package com.easemob.chatuidemo.activity;
 
 import java.util.List;
 
-import android.R.raw;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,12 +37,12 @@ import android.widget.Toast;
 
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
-import com.easemob.chat.EMGroup;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.utils.UserUtils;
 import com.easemob.chatuidemo.widget.ExpandGridView;
 import com.easemob.util.EMLog;
 import com.easemob.util.NetUtils;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 public class ChatRoomDetailsActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "ChatRoomDetailsActivity";
@@ -405,7 +403,10 @@ public class ChatRoomDetailsActivity extends BaseActivity implements OnClickList
 //				avatar.setBounds(0, 0, referenceWidth, referenceHeight);
 //				button.setCompoundDrawables(null, avatar, null, null);
 				holder.textView.setText(username);
+	
 				UserUtils.setUserAvatar(getContext(), username, holder.imageView);
+				//SKYMODIFY 
+				SkyUserUtils.setUserAvatar(getContext(), username, holder.imageView,holder.textView);
 				// demo群组成员的头像都用默认头像，需由开发者自己去设置头像
 				if (isInDeleteMode) {
 					// 如果是删除模式下，显示减人图标

@@ -30,14 +30,14 @@ import android.widget.TextView;
 
 import com.easemob.EMCallBack;
 import com.easemob.applib.controller.HXSDKHelper;
-import com.easemob.applib.model.HXSDKModel;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatOptions;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
-import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.DemoHXSDKModel;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.ui.BindWebexActivity;
+import com.skytech.chatim.ui.PersonInfoActivity;
 
 /**
  * 设置界面
@@ -166,7 +166,10 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		blacklistContainer = (LinearLayout) getView().findViewById(R.id.ll_black_list);
 		llDiagnose=(LinearLayout) getView().findViewById(R.id.ll_diagnose);
 		pushNick=(LinearLayout) getView().findViewById(R.id.ll_set_push_nick);
-		
+		//SKYMODIFY
+		((LinearLayout) getView().findViewById(R.id.webexInfo)).setOnClickListener(this);
+		((LinearLayout) getView().findViewById(R.id.personInfo)).setOnClickListener(this);	
+	
 		blacklistContainer.setOnClickListener(this);
 		rl_switch_notification.setOnClickListener(this);
 		rl_switch_sound.setOnClickListener(this);
@@ -332,6 +335,12 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		case R.id.ll_set_push_nick:
 			startActivity(new Intent(getActivity(), OfflinePushNickActivity.class));
 			break;
+	     case R.id.personInfo:
+	            startActivity(new Intent(getActivity(), PersonInfoActivity.class));
+	         break;
+         case R.id.webexInfo:
+             startActivity(new Intent(getActivity(), BindWebexActivity.class));	            
+	            break;
 		default:
 			break;
 		}

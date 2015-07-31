@@ -62,6 +62,7 @@ import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.widget.Sidebar;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.ui.ContactInfoActivity;
 
 /**
  * 联系人列表页
@@ -273,7 +274,11 @@ public class ContactlistFragment extends Fragment {
 		}else if(item.getItemId() == R.id.add_to_blacklist){
 			moveToBlacklist(toBeProcessUsername);
 			return true;
-		}
+		}else if(item.getItemId() == R.id.contact_info){
+		    ContactInfoActivity.showContact(getActivity(),toBeProcessUsername);
+		       
+            return true;
+        }
 		return super.onContextItemSelected(item);
 	}
 

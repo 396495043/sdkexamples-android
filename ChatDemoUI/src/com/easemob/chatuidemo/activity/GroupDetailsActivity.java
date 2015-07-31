@@ -47,6 +47,8 @@ import com.easemob.chatuidemo.widget.ExpandGridView;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.NetUtils;
+import com.skytech.chatim.proxy.SkyUserUtils;
+import com.skytech.chatim.ui.ContactInfoActivity;
 
 public class GroupDetailsActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "GroupDetailsActivity";
@@ -629,6 +631,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 //				button.setCompoundDrawables(null, avatar, null, null);
 				holder.textView.setText(username);
 				UserUtils.setUserAvatar(getContext(), username, holder.imageView);
+				//SKYMODIFY 
+				SkyUserUtils.setUserAvatar(getContext(), username, holder.imageView,holder.textView);
+
 				// demo群组成员的头像都用默认头像，需由开发者自己去设置头像
 				if (isInDeleteMode) {
 					// 如果是删除模式下，显示减人图标
@@ -656,6 +661,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 							EMLog.d("group", "remove user from group:" + username);
 							deleteMembersFromGroup(username);
 						} else {
+						    //SKYMODIFY   进入用户详情
+						    ContactInfoActivity.showContact(GroupDetailsActivity.this, username);
 							// 正常情况下点击user，可以进入用户详情或者聊天页面等等
 							// startActivity(new
 							// Intent(GroupDetailsActivity.this,

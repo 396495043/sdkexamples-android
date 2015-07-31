@@ -29,14 +29,13 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMConversation;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.utils.UserUtils;
-import com.easemob.chatuidemo.widget.Sidebar;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 /**
  * 简单的好友Adapter实现
@@ -126,6 +125,11 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
 		    holder.nameTextview.setText(username);
 		    //设置用户头像
 			UserUtils.setUserAvatar(getContext(), username, holder.avatar);
+			//SKYMODIFY
+			SkyUserUtils.setUserAvatar(getContext(), username, holder.avatar,holder.nameTextview);
+			if (!username.equals(user.getNick())){
+			    holder.nameTextview.setText(username+" "+ user.getNick());
+			}
 			if(holder.unreadMsgView != null)
 			    holder.unreadMsgView.setVisibility(View.INVISIBLE);
 		}
@@ -187,7 +191,9 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
         List<User> mOriginalList = null;
 		
 		public MyFilter(List<User> myList) {
-			this.mOriginalList = myList;
+		    // 以前的 mOriginalList 是引用到 userList ，数目是变的，而且不支持回退操作。 （每次都是在上次结果上再过滤）
+		    this.mOriginalList = new ArrayList<User>();
+			this.mOriginalList.addAll(myList);
 		}
 
 		@Override
@@ -209,8 +215,8 @@ public class ContactAdapter extends ArrayAdapter<User>  implements SectionIndexe
 				for(int i=0;i<count;i++){
 					final User user = mOriginalList.get(i);
 					String username = user.getUsername();
-					
-					if(username.startsWith(prefixString)){
+						//SKYMODIFY filter 
+					if(SkyUserManager.getInstances().isFilterUser(user,prefixString)){
 						newValues.add(user);
 					}
 					else{

@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -36,12 +34,12 @@ import com.easemob.applib.controller.HXSDKHelper;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMChatRoom;
 import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMConversation.EMConversationType;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.chat.ImageMessageBody;
 import com.easemob.chat.TextMessageBody;
-import com.easemob.chat.EMConversation.EMConversationType;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
@@ -50,6 +48,7 @@ import com.easemob.chatuidemo.utils.DateUtils;
 import com.easemob.chatuidemo.utils.SmileUtils;
 import com.easemob.chatuidemo.utils.UserUtils;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 /**
  * 显示所有聊天记录adpater
@@ -116,6 +115,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 			} else if (username.equals(Constant.NEW_FRIENDS_USERNAME)) {
 				holder.name.setText("申请与通知");
 			}
+
 			Map<String,RobotUser> robotMap=((DemoHXSDKHelper)HXSDKHelper.getInstance()).getRobotList();
 			if(robotMap!=null&&robotMap.containsKey(username)){
 				String nick = robotMap.get(username).getNick();
@@ -126,6 +126,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				}
 			}else{
 				holder.name.setText(username);
+			//SKYMODIFY 
+			holder.name.setText(SkyUserUtils.getNickName(username));
 			}
 		}
 

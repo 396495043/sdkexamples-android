@@ -17,6 +17,8 @@ import com.easemob.chatuidemo.domain.InviteMessage.InviteMesageStatus;
 import com.easemob.chatuidemo.domain.RobotUser;
 import com.easemob.chatuidemo.domain.User;
 import com.easemob.util.HanziToPinyin;
+import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.proxy.UserExtend;
 
 public class DemoDBManager {
     static private DemoDBManager dbMgr = new DemoDBManager();
@@ -46,6 +48,7 @@ public class DemoDBManager {
                     values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
                 if(user.getAvatar() != null)
                     values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
+                SkyUserManager.getInstances().setExtendValue(user, values);
                 db.replace(UserDao.TABLE_NAME, null, values);
             }
         }
@@ -69,6 +72,7 @@ public class DemoDBManager {
                 user.setUsername(username);
                 user.setNick(nick);
                 user.setAvatar(avatar);
+                SkyUserManager.getInstances().getExtendValue(cursor, user);   
                 String headerName = null;
                 if (!TextUtils.isEmpty(user.getNick())) {
                     headerName = user.getNick();
@@ -119,6 +123,7 @@ public class DemoDBManager {
             values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
         if(user.getAvatar() != null)
             values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
+        SkyUserManager.getInstances().setExtendValue(user, values);
         if(db.isOpen()){
             db.replace(UserDao.TABLE_NAME, null, values);
         }

@@ -14,12 +14,20 @@
 package com.easemob.chatuidemo.domain;
 
 import com.easemob.chat.EMContact;
+import com.skytech.chatim.proxy.UserExtend;
 
 public class User extends EMContact {
 	private int unreadMsgCount;
 	private String header;
 	private String avatar;
 	
+	//SKYMODIFY
+	private UserExtend extend = new UserExtend() ;
+	public UserExtend getExtend() {
+		return extend;
+	}
+
+
 	public User(){}
 	
 	public User(String username){

@@ -68,6 +68,7 @@ import com.easemob.chat.TextMessageBody;
 import com.easemob.chat.VideoMessageBody;
 import com.easemob.chat.VoiceMessageBody;
 import com.easemob.chatuidemo.Constant;
+import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.AlertDialog;
@@ -90,6 +91,10 @@ import com.easemob.util.EMLog;
 import com.easemob.util.FileUtils;
 import com.easemob.util.LatLng;
 import com.easemob.util.TextFormater;
+import com.skytech.chatim.proxy.SkyProductManager;
+import com.skytech.chatim.proxy.SkyUserUtils;
+import com.skytech.chatim.ui.ContactInfoActivity;
+import com.skytech.chatim.ui.PersonInfoActivity;
 
 public class MessageAdapter extends BaseAdapter{
 
@@ -407,7 +412,24 @@ public class MessageAdapter extends BaseAdapter{
 				}
 
 			}
+			
+			//SKYMODIFY show user info 
+			holder.iv_avatar.setOnClickListener(new View.OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    if (message.getFrom().equals(
+                            DemoApplication.getInstance().getUserName())) {
+                        Activity activity = (Activity) v.getContext();
+                        activity.startActivity(new Intent(activity,
+                                PersonInfoActivity.class));
+                    } else {
+                        ContactInfoActivity.showContact(
+                                (Activity) v.getContext(), message.getFrom());
 
+                    }
+                }
+            });
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -571,6 +593,14 @@ public class MessageAdapter extends BaseAdapter{
 	    }else{
 	        UserUtils.setUserAvatar(context, message.getFrom(), imageView);
 	    }
+	    
+	    //SKYMODIFY
+	    if(message.direct == Direct.SEND){
+	        //显示自己头像
+	        SkyUserUtils.setUserAvatar(context, EMChatManager.getInstance().getCurrentUser(), imageView);
+	    }else{
+	    	SkyUserUtils.setUserAvatar(context, message.getFrom(), imageView);
+	    }
 	}
 
 	/**
@@ -585,6 +615,8 @@ public class MessageAdapter extends BaseAdapter{
 		Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
 		// 设置内容
 		holder.tv.setText(span, BufferType.SPANNABLE);
+		//SKYMODIFY ,manager webex link 
+		SkyProductManager.getInstances().managerSpan(holder.tv);
 		// 设置长按事件监听
 		holder.tv.setOnLongClickListener(new OnLongClickListener() {
 			@Override

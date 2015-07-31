@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="header">
+        <item>拍照</item>
+        <item>图库</item>
+    </string-array>
+
+    <string name="userName">用户名</string>
+    <string name="nickName">昵称</string>
+    <string name="email">邮箱</string>
+    <string name="webexInvite"> 发出一个webex 会议链接, 邀请加入会议</string>
+    <string name="needInstallWebex">你需要先安装webex客户端才能使用此功能,你需要下载此软件吗？</string>
+    <string name="downloadWebexMes">已经在后台帮你下载Webex会议客户端，下载完成后会提示你安装</string>
+    <string name="downloadWebex">已经在后台帮你下载Webex会议客户端，下载完成后会提示你安装</string>
+    <string name="needBindWebex">请先在设置中绑定webex账号</string>
+    <string name="login_error">登陆错误</string>
+    <string name="personInfo">用户信息</string>
+    <string name="contactInfo">好友信息</string>
+    <string name="registerPending">目前注册尚未开放</string>
+    <string name="webexInfo">绑定Webex账号</string>
+    <string name="hint_nickName">昵称</string>
+    <string name="hint_email">邮件 </string>
+    <string name="save_person">确定</string>
+    <string name="person_avatar">头像</string>
+    <string name="server_error_add_contact">add contact error</string>
+    <string name="server_error_remove_contact">remove contact error</string>
+    <string name="server_error_get_sky_user">get sky user error</string>
+    <string name="server_error_get_hx_user">get hx user error</string>
+    <string name="server_error_get_sky_user_by_hx">get sky user by hx id error</string>
+    <string name="server_error_upload_file">upload image error</string>
+    <string name="server_error_update_user">update user error</string>
+    <string name="update_user_success">更新用户信息成功</string>
+    <string name="input_error_email">邮件格式错误</string>
+    <string name="input_error_nickname">昵称格式错误</string>
+    <string name="contact_info">联系人信息</string>
+    <string name="org">组织</string>
+    <string name="group">部门</string>
+    <string name="workPhone">工作电话</string>
+    <string name="phone">手机</string>
+
+</resources>

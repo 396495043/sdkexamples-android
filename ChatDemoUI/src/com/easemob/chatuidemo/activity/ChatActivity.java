@@ -95,6 +95,7 @@ import com.easemob.chatuidemo.adapter.ExpressionPagerAdapter;
 import com.easemob.chatuidemo.adapter.MessageAdapter;
 import com.easemob.chatuidemo.adapter.VoicePlayClickListener;
 import com.easemob.chatuidemo.domain.RobotUser;
+import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.utils.CommonUtils;
 import com.easemob.chatuidemo.utils.ImageUtils;
 import com.easemob.chatuidemo.utils.SmileUtils;
@@ -104,6 +105,11 @@ import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
 import com.easemob.util.VoiceRecorder;
+import com.skytech.chatim.proxy.ChatAction;
+import com.skytech.chatim.proxy.SkyProductManager;
+import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.proxy.SkyUserUtils;
+import com.skytech.chatim.ui.ContactInfoActivity;
 
 /**
  * 聊天页面
@@ -390,8 +396,13 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 					((TextView) findViewById(R.id.name)).setText(toChatUsername);
 				}
 			}else{
-				((TextView) findViewById(R.id.name)).setText(toChatUsername);
+				//SKYMODIFY show user nick 
+				User user = SkyUserUtils.getUser(toChatUsername);
+				SkyUserUtils.refreshUserInfo(this,toChatUsername,null,null,user);
+				((TextView) findViewById(R.id.name)).setText(SkyUserUtils.getTitle(user));
 			}
+
+
 		} else {
 			// 群聊
 			findViewById(R.id.container_to_group).setVisibility(View.VISIBLE);
@@ -756,7 +767,23 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				videoCallBtn.setEnabled(false);
 				toggleMore(null);
 			}
-		}
+		}else if (id == R.id.btn_webex_call) { // webex通话
+		    if (SkyProductManager.getInstances().notSupportWebex(this)){
+		        return ;
+		    }
+            String from = SkyUserManager.getInstances().getSkyUser().getNickName();
+            String to = toChatUsername;
+            ChatAction chatAction = SkyProductManager.getInstances()
+                    .getSendText(this,from, to);
+            String[] sendTexts = chatAction.getSendTexts();
+            if (sendTexts != null) {
+                for (int i = 0; i < sendTexts.length; i++) {
+                    sendText(sendTexts[i]);
+                }
+            }
+            chatAction.action(this);
+
+        }
 	}
 
 	/**
@@ -1233,6 +1260,17 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		startActivityForResult(new Intent(this, AlertDialog.class).putExtra("titleIsCancel", true).putExtra("msg", st5)
 				.putExtra("cancel", true), REQUEST_CODE_EMPTY_HISTORY);
 	}
+	
+	
+	/**
+	 * 点击清空聊天记录
+	 * 
+	 * @param view
+	 */
+	public void showUserInfo(View view) {
+		 ContactInfoActivity.showContact(this,toChatUsername);
+	}
+	
 
 	/**
 	 * 点击进入群组详情

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eff2f6"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_top_bar"
+            android:background="@color/top_bar_normal_bg"
+            android:gravity="center_vertical" >
+
+            <include layout="@layout/commom_back_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/personInfo"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="changeHeader" >
+
+            <ImageView
+                android:id="@+id/iv_header"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:contentDescription="TODO"
+                android:src="@drawable/default_avatar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="40dip"
+                android:layout_toLeftOf="@id/iv_header"
+                android:text="@string/person_avatar"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/et_input_uid"
+                style="@style/sky_edit_style"
+                android:layout_marginTop="0dip"
+                android:hint="@string/hint_nickName" />
+
+            <EditText
+                android:id="@+id/et_input_nickname"
+                style="@style/sky_edit_style"
+                android:hint="@string/hint_nickName" />
+
+            <EditText
+                android:id="@+id/et_input_email"
+                style="@style/sky_edit_style"
+                android:hint="@string/hint_email" />
+
+            <EditText
+                android:id="@+id/et_input_org"
+                style="@style/sky_edit_style"
+                android:hint="@string/org" />
+
+            <EditText
+                android:id="@+id/et_input_group"
+                style="@style/sky_edit_style"
+                android:hint="@string/group" />
+
+            <EditText
+                android:id="@+id/et_input_workPhone"
+                style="@style/sky_edit_style"
+                android:hint="@string/workPhone" />
+
+            <EditText
+                android:id="@+id/et_input_phone"
+                style="@style/sky_edit_style"
+                android:hint="@string/phone" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal" >
+
+                <Button
+                    style="@style/sky_button"
+                    android:layout_weight="1"
+                    android:onClick="back"
+                    android:text="取消" />
+
+                <Button
+                    android:id="@+id/btn_save"
+                    style="@style/sky_button"
+                    android:layout_weight="1"
+                    android:text="@string/save_person" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

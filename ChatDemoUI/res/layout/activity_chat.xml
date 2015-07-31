@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:background="@drawable/common_tab_bg"
-            android:onClick="emptyHistory" >
+            android:onClick="showUserInfo" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="9dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/mm_title_remove" />
+                android:src="@drawable/user_info" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -450,6 +450,38 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/attach_video_call"
+                            android:textColor="#727171" />
+                    </LinearLayout>
+                   <!--  jason add webex button -->
+                    
+                       <LinearLayout
+                        android:id="@+id/container_webex_call"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="64dp"
+                            android:layout_height="64dp" >
+
+                            <ImageView
+                                android:id="@+id/btn_webex_call"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/logo_uidemo"
+                                android:clickable="true"
+                                android:onClick="onClick"
+                                android:scaleType="fitCenter" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Webex call"
                             android:textColor="#727171" />
                     </LinearLayout>
                 </LinearLayout>

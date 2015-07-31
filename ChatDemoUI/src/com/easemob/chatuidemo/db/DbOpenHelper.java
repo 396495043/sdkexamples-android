@@ -18,6 +18,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.easemob.applib.controller.HXSDKHelper;
+import com.skytech.chatim.proxy.SkyUserManager;
 
 public class DbOpenHelper extends SQLiteOpenHelper{
 
@@ -28,6 +29,8 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 			+ UserDao.TABLE_NAME + " ("
 			+ UserDao.COLUMN_NAME_NICK + " TEXT, "
 			+ UserDao.COLUMN_NAME_AVATAR + " TEXT, "
+			+ SkyUserManager.COLUMN_NAME_EMAIL + " TEXT, "
+            + SkyUserManager.COLUMN_NAME_COMMENT + " TEXT, "			
 			+ UserDao.COLUMN_NAME_ID + " TEXT PRIMARY KEY);";
 	
 	private static final String INIVTE_MESSAGE_TABLE_CREATE = "CREATE TABLE "

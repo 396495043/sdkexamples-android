@@ -31,13 +31,11 @@ import com.easemob.chat.EMContact;
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMGroup;
 import com.easemob.chat.EMMessage;
-import com.easemob.chat.ImageMessageBody;
-import com.easemob.chat.TextMessageBody;
-import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.utils.CommonUtils;
 import com.easemob.chatuidemo.utils.SmileUtils;
 import com.easemob.util.DateUtils;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 /**
  * 聊天记录adpater
@@ -83,6 +81,7 @@ public class ChatHistoryAdapter extends ArrayAdapter<EMContact> {
 			holder.avatar.setImageResource(R.drawable.groups_icon);
 		}else{
 			holder.avatar.setImageResource(R.drawable.default_avatar);
+			SkyUserUtils.setUserAvatar(holder.avatar.getContext(),user.getUsername(),holder.avatar,null);
 		}
 		
 		String username = user.getUsername();

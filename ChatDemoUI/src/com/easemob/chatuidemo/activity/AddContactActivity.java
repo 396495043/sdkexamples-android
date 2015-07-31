@@ -32,6 +32,7 @@ import com.easemob.applib.utils.HXPreferenceUtils;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.ui.UserListActivity;
 
 public class AddContactActivity extends BaseActivity{
 	private EditText editText;
@@ -77,12 +78,7 @@ public class AddContactActivity extends BaseActivity{
 				startActivity(new Intent(this, AlertDialog.class).putExtra("msg", st));
 				return;
 			}
-			
-			// TODO 从服务器获取此contact,如果不存在提示不存在此用户
-			
-			//服务器存在此用户，显示此用户和添加按钮
-			searchedUserLayout.setVisibility(View.VISIBLE);
-			nameText.setText(toAddUsername);
+			UserListActivity.query(this,toAddUsername);
 			
 		} 
 	}	
