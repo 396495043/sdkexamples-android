@@ -44,6 +44,7 @@ import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -398,6 +399,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			}else{
 				//SKYMODIFY show user nick 
 				User user = SkyUserUtils.getUser(toChatUsername);
+				Log.d(TAG, "  user.getUsername44() "+user.getNick());
 				SkyUserUtils.refreshUserInfo(this,toChatUsername,null,null,user);
 				((TextView) findViewById(R.id.name)).setText(SkyUserUtils.getTitle(user));
 			}

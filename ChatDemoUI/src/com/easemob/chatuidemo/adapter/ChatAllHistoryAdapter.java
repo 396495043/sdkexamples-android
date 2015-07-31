@@ -128,6 +128,8 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				holder.name.setText(username);
 			//SKYMODIFY 
 			holder.name.setText(SkyUserUtils.getNickName(username));
+			SkyUserUtils.setUserAvatar(holder.avatar.getContext(),username,holder.avatar,null);
+
 			}
 		}
 

@@ -118,6 +118,9 @@ public class LoginActivity extends BaseActivity {
 	        currentPassword = passwordEditText.getText().toString().trim();
 	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
 	            login(null); 
+	        }else{
+	        	usernameEditText.setText("zhongqi.chen");
+	    		passwordEditText.setText("Pass1234");
 	        }
 		}
 

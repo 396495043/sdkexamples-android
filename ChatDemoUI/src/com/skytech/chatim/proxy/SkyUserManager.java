@@ -184,6 +184,7 @@ public class SkyUserManager {
 		User user = DemoApplication.getInstance().getContactList()
         .get(userName);
 		if (user == null){
+			Log.e(TAG,userName +" not find user in contact list ,create new user ");
 			user = getNewUser(userName);
 		}
 		return user;

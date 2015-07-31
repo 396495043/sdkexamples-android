@@ -116,6 +116,7 @@ public class SkyUserUtils {
         User user = getUser(userName);
         copySkyUserValue(user,skyUser);
         UserDao userDao = new UserDao(activity);
+        Log.d(TAG,"saveConctatuser "+ user.getNick());
         userDao.saveContact(user);
     }
 
