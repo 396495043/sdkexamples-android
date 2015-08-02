@@ -38,6 +38,7 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMGroupManager;
+import com.easemob.chatuidemo.BuildConfig;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
@@ -119,8 +120,10 @@ public class LoginActivity extends BaseActivity {
 	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
 	            login(null); 
 	        }else{
-	        	usernameEditText.setText("zhongqi.chen");
-	    		passwordEditText.setText("Pass1234");
+	        	if (BuildConfig.DEBUG){
+		        	usernameEditText.setText("zhongqi.chen");
+		    		passwordEditText.setText("Pass1234");
+	        	}
 	        }
 		}
 
@@ -266,6 +269,12 @@ public class LoginActivity extends BaseActivity {
 
 
 	private void initializeContacts() {
+		//SKYMODIFY  不是第一次，直接从本地取
+		if (!SkyUserManager.getInstances().isFirstRun(this)){
+			SkyUserManager.getInstances().getUserFromDB(this);
+			return ;
+		}
+		Map<String, User> userlist = new HashMap<String, User>();
 		//SKYMODIFY  以前 demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
 		// 现在还用以前的设定
 		List<String> usernames = new ArrayList<String>();
@@ -276,7 +285,6 @@ public class LoginActivity extends BaseActivity {
 			e.printStackTrace();
 		}
 		Log.d("roster", "contacts size: " + usernames.size());
-		Map<String, User> userlist = new HashMap<String, User>();
 		for (String username : usernames) {
 			User user = new User();
 			//nickName 缺省也是用的是 username
@@ -314,11 +322,10 @@ public class LoginActivity extends BaseActivity {
 		// 存入db
 		UserDao dao = new UserDao(LoginActivity.this);
 		List<User> users = new ArrayList<User>(userlist.values());
-		//SKYMODIFY
-		SkyUserManager.getInstances().updateUserFromDB(this,userlist);
-		SkyUserManager.getInstances().fisrtGetInfo(this,userlist);
-	
 		dao.saveContactList(users);
+		//SKYMODIFY
+		SkyUserManager.getInstances().fisrtGetInfo(this,userlist);
+
 	}
 	
 	/**

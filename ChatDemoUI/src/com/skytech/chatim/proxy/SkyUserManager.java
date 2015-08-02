@@ -1,5 +1,6 @@
 package com.skytech.chatim.proxy;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -107,31 +108,23 @@ public class SkyUserManager {
         return skyUser;
     }
 
+	public boolean isFirstRun(Activity activity) {
+        if (DataUtil.isEmpty(DataUtil.readFromPreferences(activity,
+                DataUtil.HasRun))) {
+            DataUtil.writeToPreferences(activity, DataUtil.HasRun, "HasRun");
+		return true;
+        }
+        return false;
+	}
 
     
-    
-    /**
-     * Login 中 中简单的处理成每次登陆都去获取好友username，放进 contactlist ,nickName 缺省也是用的是 username。
-     * 需要把 db 的 nick name 信息 重新 导入到 contatctList 
-     * 
-     */
-    public void updateUserFromDB(Activity activity, Map<String, User> userlist) {
-        UserDao dao = new UserDao(activity);
-       Map<String, User> dbUserList = dao.getContactList();
-       Set<String> users = dbUserList.keySet();
-       Log.d(TAG," dbUserList nick " + dbUserList) ;
-       Log.d(TAG," userlist nick " + userlist) ;
-       for (Iterator iterator = users.iterator(); iterator.hasNext();) {
-        String userName = (String) iterator.next();
-        User dbUser = dbUserList.get(userName);
-        User netUser = userlist.get(userName);
-        if (dbUser!=null && netUser!=null){
-            netUser.setNick(dbUser.getNick());
-            netUser.setAvatar(dbUser.getAvatar());    
-        }
-    }
-        
-    }
+	public void getUserFromDB(Activity activity) {
+		UserDao dao = new UserDao(activity);
+		Map<String, User> userlist = dao.getContactList();
+
+		// 存入内存
+		DemoApplication.getInstance().setContactList(userlist);
+	}
 
 
     public boolean isFilterUser(User user, String prefixString) {
@@ -140,9 +133,7 @@ public class SkyUserManager {
 
 
     public void fisrtGetInfo(final Activity activity, final Map<String, User> userlist) {
-        if (DataUtil.isEmpty(DataUtil.readFromPreferences(activity,
-                DataUtil.HasRun))) {
-            DataUtil.writeToPreferences(activity, DataUtil.HasRun, "HasRun");
+
             new Thread() {
                 @Override
                 public void run() {
@@ -156,7 +147,6 @@ public class SkyUserManager {
                     }
                 }
             }.start();
-        }
 
     }
 
@@ -228,5 +218,10 @@ public class SkyUserManager {
 		skyUser.setWorkPhone(result.getWorkPhone());
 		skyUser.setPhone(result.getPhone());
 	}
+
+
+
+
+
 
 }

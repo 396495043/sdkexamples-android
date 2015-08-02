@@ -16,10 +16,8 @@ package com.easemob.chatuidemo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,7 +28,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
 import com.easemob.EMEventListener;
@@ -57,6 +54,7 @@ import com.easemob.chatuidemo.utils.CommonUtils;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
+import com.easemob.chatuidemo.R;
 
 /**
  * Demo UI HX SDK helper class which subclass HXSDKHelper
