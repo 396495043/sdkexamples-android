@@ -307,6 +307,12 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
 
+         <activity
+            android:name="com.skytech.chatim.ui.AboutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
         <!-- 开机自启动服务 -->
         <receiver android:name="com.easemob.chat.StartServiceReceiver" >
             <intent-filter android:priority="1000" >

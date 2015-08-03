@@ -1,6 +1,5 @@
 package com.skytech.chatim.proxy;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -19,9 +18,10 @@ import com.easemob.chatuidemo.db.UserDao;
 import com.easemob.chatuidemo.domain.User;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.DataUtil;
+import com.skytech.chatim.sky.vo.LoginEasemobResponse.LoginResult;
+import com.skytech.chatim.sky.vo.RestResponse;
 import com.skytech.chatim.sky.vo.SkyUser;
 import com.skytech.chatim.sky.vo.SkyUserResponse;
-import com.skytech.chatim.sky.vo.LoginEasemobResponse.LoginResult;
 
 /**
  * HX Demo 和 我们应用的集成关系 。 主要是登录集成，好友关系集成和 头像昵称集成。 用户头像昵称集成 。 所有的头像和昵称 ，用 UserUtil
@@ -34,90 +34,91 @@ import com.skytech.chatim.sky.vo.LoginEasemobResponse.LoginResult;
  *
  */
 
-
-//SKYMODIFY
+// SKYMODIFY
 public class SkyUserManager {
-    public static final String COLUMN_NAME_EMAIL = "email";
-    public static final String COLUMN_NAME_COMMENT = "comment";
-    private static String TAG = SkyUserManager.class.getSimpleName();
-    private static SkyUserManager instantce = new SkyUserManager() ;
-    private SkyUser skyUser ;
-    public static SkyUserManager getInstances() {
-        return instantce;
-    }
-
-    
-    private  SkyUserManager() {
-    }
-
-
-
-
-    String token ;
-    public String getToken() {
-        return token;
-    }
-
-
-    public void setToken(String token) {
-       this.token = token ;
-        
-    }
-
-
-    public boolean isAllowHxAutoLogin() {
-        return false;
-    }
-
-
-    public void save(String username, String password) {
-        Context context = DemoApplication.getInstance();
-        DataUtil.writeToGlobalPreferences(context, DataUtil.SKY_USERNAME, username);
-        DataUtil.writeToGlobalPreferences(context, DataUtil.SKY_PASSWORD, password);
-    }
-
-
-    public String getUserName() {
-        Context context = DemoApplication.getInstance();
-        return DataUtil.readGlobalPreferences(context, DataUtil.SKY_USERNAME);
-    }
-
-
-    public String getPassword() {
-        Context context = DemoApplication.getInstance();
-        return DataUtil.readGlobalPreferences(context, DataUtil.SKY_PASSWORD);
-    }
-
-
-
-    public void setSkyUser(LoginResult result) {
-        skyUser = new SkyUser();
-        skyUser.setUid(result.getUid());
-        String nickName = result.getNickName();
-        if (DataUtil.isEmpty(nickName)){
-            nickName = DemoApplication.getInstance().getUserName();
-        }
-        skyUser.setNickName(nickName);
-        skyUser.setAvatar((result.getAvatar()));
-        skyUser.setEmail((result.getEmail()));
-    }
-
-
-    public SkyUser getSkyUser() {
-    	//TODO  crash restore 
-        return skyUser;
-    }
-
-	public boolean isFirstRun(Activity activity) {
-        if (DataUtil.isEmpty(DataUtil.readFromPreferences(activity,
-                DataUtil.HasRun))) {
-            DataUtil.writeToPreferences(activity, DataUtil.HasRun, "HasRun");
-		return true;
-        }
-        return false;
+	public static final String COLUMN_NAME_EMAIL = "email";
+	public static final String COLUMN_NAME_COMMENT = "comment";
+	private static String TAG = SkyUserManager.class.getSimpleName();
+	private static SkyUserManager instantce = new SkyUserManager();
+	
+	private SkyUser skyUser;
+	private String token;
+	
+	public static SkyUserManager getInstances() {
+		return instantce;
 	}
 
-    
+	private SkyUserManager() {
+	}
+
+	public String getToken() {
+		if (token == null){
+			DataUtil.readFromPreferences(getContext(), DataUtil.SKY_TOKEN);
+		}
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+		DataUtil.writeToGlobalPreferences(getContext(), DataUtil.SKY_TOKEN,
+				token);
+	}
+
+	private Context getContext() {
+		return DemoApplication.getInstance();
+	}
+
+	public boolean isAllowHxAutoLogin() {
+		return false;
+	}
+
+	public void saveAccount(String username, String password) {
+		Context context = DemoApplication.getInstance();
+		DataUtil.writeToGlobalPreferences(context, DataUtil.SKY_USERNAME,
+				username);
+		DataUtil.writeToGlobalPreferences(context, DataUtil.SKY_PASSWORD,
+				password);
+	}
+
+	public String getUserName() {
+		Context context = DemoApplication.getInstance();
+		return DataUtil.readGlobalPreferences(context, DataUtil.SKY_USERNAME);
+	}
+
+	public String getPassword() {
+		Context context = DemoApplication.getInstance();
+		return DataUtil.readGlobalPreferences(context, DataUtil.SKY_PASSWORD);
+	}
+
+	public void setSkyUser(LoginResult result) {
+		skyUser = new SkyUser();
+		skyUser.setUid(result.getUid());
+		String nickName = result.getNickName();
+		if (DataUtil.isEmpty(nickName)) {
+			nickName = DemoApplication.getInstance().getUserName();
+		}
+		skyUser.setNickName(nickName);
+		skyUser.setAvatar((result.getAvatar()));
+		skyUser.setEmail((result.getEmail()));
+		DataUtil.writeObject(getContext(), DataUtil.MySKyUser, skyUser);
+	}
+
+	public SkyUser getSkyUser() {
+		if (skyUser == null){
+			skyUser = (SkyUser) DataUtil.readObject(getContext(), DataUtil.MySKyUser);
+		}
+		return skyUser;
+	}
+
+	public boolean isFirstRun(Activity activity) {
+		if (DataUtil.isEmpty(DataUtil.readFromPreferences(activity,
+				DataUtil.HasRun))) {
+			DataUtil.writeToPreferences(activity, DataUtil.HasRun, "HasRun");
+			return true;
+		}
+		return false;
+	}
+
 	public void getUserFromDB(Activity activity) {
 		UserDao dao = new UserDao(activity);
 		Map<String, User> userlist = dao.getContactList();
@@ -126,60 +127,59 @@ public class SkyUserManager {
 		DemoApplication.getInstance().setContactList(userlist);
 	}
 
+	public boolean isFilterUser(User user, String prefixString) {
+		return user.getUsername().indexOf(prefixString) >= 0
+				|| user.getNick().indexOf(prefixString) >= 0;
+	}
 
-    public boolean isFilterUser(User user, String prefixString) {
-        return user.getUsername().indexOf(prefixString)>=0 || user.getNick().indexOf(prefixString)>=0;
-    }
+	public void fisrtGetInfo(final Activity activity,
+			final Map<String, User> userlist) {
 
+		new Thread() {
+			@Override
+			public void run() {
+				Set<String> users = userlist.keySet();
+				final ServerInterface serverInterface = RetrofitClient
+						.getServerInterface();
+				for (Iterator iterator = users.iterator(); iterator.hasNext();) {
+					String userName = (String) iterator.next();
+					refreshUserInfo(activity, serverInterface, userName);
+				}
+			}
+		}.start();
 
-    public void fisrtGetInfo(final Activity activity, final Map<String, User> userlist) {
+	}
 
-            new Thread() {
-                @Override
-                public void run() {
-                    Set<String> users = userlist.keySet();
-                    final ServerInterface serverInterface = RetrofitClient
-                            .getServerInterface();
-                    for (Iterator iterator = users.iterator(); iterator
-                            .hasNext();) {
-                        String userName = (String) iterator.next();
-                        refreshUserInfo(activity ,serverInterface, userName);
-                    }
-                }
-            }.start();
+	private void refreshUserInfo(final Activity activity,
+			final ServerInterface serverInterface, final String userName) {
+		serverInterface.getSkyUser(userName, new Callback<SkyUserResponse>() {
+			@Override
+			public void failure(RetrofitError error) {
+				Log.e(TAG, " refreshUserInfo  error" + error);
+			}
 
-    }
-
-
-    private void refreshUserInfo(final Activity activity, final ServerInterface serverInterface,
-            final String userName) {
-        serverInterface.getSkyUser(userName, new Callback<SkyUserResponse>() {
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(TAG, " refreshUserInfo  error" + error);
-            }
-
-            @Override
-            public void success(SkyUserResponse skyUserResponse, Response arg1) {
-                Log.d(TAG, " skyUser  " + skyUserResponse);
-                SkyUserUtils.setUserInfo(activity, userName, skyUserResponse.getResult());            }
-        });
-    }
-
+			@Override
+			public void success(SkyUserResponse skyUserResponse, Response arg1) {
+				Log.d(TAG, " skyUser  " + skyUserResponse);
+				SkyUserUtils.setUserInfo(activity, userName,
+						skyUserResponse.getResult());
+			}
+		});
+	}
 
 	public User getUser(String userName) {
-		if (userName.equals(DemoApplication.getInstance().getUserName())){
+		if (userName.equals(DemoApplication.getInstance().getUserName())) {
 			return getMyUser();
 		}
 		User user = DemoApplication.getInstance().getContactList()
-        .get(userName);
-		if (user == null){
-			Log.e(TAG,userName +" not find user in contact list ,create new user ");
+				.get(userName);
+		if (user == null) {
+			Log.e(TAG, userName
+					+ " not find user in contact list ,create new user ");
 			user = getNewUser(userName);
 		}
 		return user;
 	}
-
 
 	private User getMyUser() {
 		User user = new User(skyUser.getUid());
@@ -188,11 +188,9 @@ public class SkyUserManager {
 		return user;
 	}
 
-
 	private User getNewUser(String userName) {
 		return new User(userName);
 	}
-
 
 	public void getExtendValue(Cursor cursor, User user) {
 		UserExtend extend = user.getExtend();
@@ -211,17 +209,63 @@ public class SkyUserManager {
 			values.put(COLUMN_NAME_COMMENT, extend.getComment());
 	}
 
-	public  void setSkyUserInfo(final Context activity,
-			SkyUser result) {
+	public void setSkyUserInfo(final Context activity, SkyUser result) {
 		skyUser.setOrg(result.getOrg());
 		skyUser.setGroup(result.getGroup());
 		skyUser.setWorkPhone(result.getWorkPhone());
 		skyUser.setPhone(result.getPhone());
 	}
 
+	public void onContactAdd(Activity activity, String username) {
+		// SKYMODIFY ,when Contact change ,need notify sky server .
+		final ServerInterface serverInterface = RetrofitClient
+				.getServerInterface();
+		String myName = SkyUserManager.getInstances().getUserName();
+		// add contact at IM app server
+		serverInterface.addFriend(myName, username, "",
+				new Callback<RestResponse>() {
 
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, " onContactAdded  error" + error);
+						// AndroidUtil.showToast(MainActivity.this,
+						// R.string.server_error_add_contact);
+					}
 
+					@Override
+					public void success(RestResponse arg0, Response arg1) {
+						Log.d(TAG, " onContactAdded success " + arg0);
+						// contactListFragment.refresh();
+						// AndroidUtil.showToast(MainActivity.this, " 成功 " );
+					}
+				});
 
+	}
 
+	public void onContactDeleted(Activity activity, String username) {
+		final ServerInterface serverInterface = RetrofitClient
+				.getServerInterface();
+		String myName = SkyUserManager.getInstances().getUserName();
+		// remove contact at IM app server
+		serverInterface.deleteFriend(myName, username,
+				new Callback<RestResponse>() {
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, " onContactRemoved  error" + error);
+						// AndroidUtil.showToast(MainActivity.this,
+						// R.string.server_error_remove_contact);
+					}
+
+					@Override
+					public void success(RestResponse arg0, Response arg1) {
+						Log.d(TAG, " onContactRemoved  success " + arg0);
+						// contactListFragment.refresh();
+						// AndroidUtil.showToast(MainActivity.this, " 成功 " );
+
+					}
+				});
+
+	}
 
 }

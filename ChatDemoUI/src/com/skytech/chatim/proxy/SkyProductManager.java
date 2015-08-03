@@ -43,24 +43,11 @@ public class SkyProductManager {
         return instantce;
     }
 
-    
     private  SkyProductManager() {
     }
 
 
     public  ChatAction  getSendText(Activity activity ,String from, String to) {
-//        String key =DataUtil.readFromPreferences(this,SkyConstants.WBX_PMR_MEETING_KEY);
-//        if (key == null || key.trim().length() == 0){
-//            AndroidUtil.showToast(this,"你还没有配置webex 账号，无法使用此功能");
-//            return  ;
-//        }
-//        String userName = DemoApplication.getInstance().getUserName() ;
-        //sendText(userName +" Jasonc 发出一个webex 会议链接 邀请加入会议");
-        //sendText("http://go.webex.com.cn/meet/jasonc");  
-        //String MK= "513576660";
-//        sendText(userName +" 发出一个webex 会议链接 邀请加入会议");
-//        sendText("https://demo.webex.com.cn/meet/guangyu.wangtcl.com");  
-
         String text = from + activity.getString(R.string.webexInvite);
         String link =  getPMRLink(activity) ; 
         String [] sendTexts = { text ,link } ;

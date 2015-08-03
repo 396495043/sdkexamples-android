@@ -36,6 +36,7 @@ import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKModel;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.ui.AboutActivity;
 import com.skytech.chatim.ui.BindWebexActivity;
 import com.skytech.chatim.ui.PersonInfoActivity;
 
@@ -169,7 +170,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		//SKYMODIFY
 		((LinearLayout) getView().findViewById(R.id.webexInfo)).setOnClickListener(this);
 		((LinearLayout) getView().findViewById(R.id.personInfo)).setOnClickListener(this);	
-	
+		((LinearLayout) getView().findViewById(R.id.about)).setOnClickListener(this);	
 		blacklistContainer.setOnClickListener(this);
 		rl_switch_notification.setOnClickListener(this);
 		rl_switch_sound.setOnClickListener(this);
@@ -341,6 +342,9 @@ public class SettingsFragment extends Fragment implements OnClickListener {
          case R.id.webexInfo:
              startActivity(new Intent(getActivity(), BindWebexActivity.class));	            
 	            break;
+         case R.id.about:
+             startActivity(new Intent(getActivity(), AboutActivity.class));	            
+	            break;	            
 		default:
 			break;
 		}

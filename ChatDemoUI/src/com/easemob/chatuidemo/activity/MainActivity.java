@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,10 +69,7 @@ import com.easemob.chatuidemo.utils.CommonUtils;
 import com.easemob.util.EMLog;
 import com.easemob.util.HanziToPinyin;
 import com.easemob.util.NetUtils;
-import com.skytech.chatim.proxy.RetrofitClient;
 import com.skytech.chatim.proxy.SkyUserManager;
-import com.skytech.chatim.sky.retrofit.ServerInterface;
-import com.skytech.chatim.sky.vo.RestResponse;
 import com.umeng.analytics.MobclickAgent;
 
 public class MainActivity extends BaseActivity implements EMEventListener {
@@ -508,10 +502,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	public class MyContactListener implements EMContactListener {
 
 		@Override
-		public void onContactAdded(List<String> usernameList) {
-			//SKYMODIFY ,when Contact change ,need notify sky server . 
-		      final ServerInterface serverInterface = RetrofitClient.getServerInterface();
-		      String myName = SkyUserManager.getInstances().getUserName() ;
+		public void onContactAdded(List<String> usernameList) {			
 			// 保存增加的联系人
 			Map<String, User> localUsers = DemoApplication.getInstance().getContactList();
 			Map<String, User> toAddUsers = new HashMap<String, User>();
@@ -522,22 +513,8 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 					userDao.saveContact(user);
 				}
 				toAddUsers.put(username, user);
-				
-				// add contact at IM app server 
-                serverInterface.addFriend(myName, username, "",new Callback<RestResponse>(){
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, " onContactAdded  error" + error);
-                        //AndroidUtil.showToast(MainActivity.this, R.string.server_error_add_contact);                        
-                    }
-
-                    @Override
-                    public void success(RestResponse arg0, Response arg1) {
-                        Log.d(TAG, " onContactAdded success " + arg0);
-                        //contactListFragment.refresh();
-                        //AndroidUtil.showToast(MainActivity.this, " 成功 "  ); 
-                    }});
+				//SKYMODIFY 
+				SkyUserManager.getInstances().onContactAdd( MainActivity.this,username);
 			}
 			localUsers.putAll(toAddUsers);
 			// 刷新ui
@@ -549,31 +526,14 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		@Override
 		public void onContactDeleted(final List<String> usernameList) {
 			// 被删除
-            final ServerInterface serverInterface = RetrofitClient.getServerInterface();
-            String myName = SkyUserManager.getInstances().getUserName() ;
 			Map<String, User> localUsers = DemoApplication.getInstance().getContactList();
 			for (String username : usernameList) {
 				localUsers.remove(username);
 				userDao.deleteContact(username);
 				inviteMessgeDao.deleteMessage(username);
 				
-                // remove contact at IM app server 
-                serverInterface.deleteFriend(myName, username, new Callback<RestResponse>(){
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, " onContactRemoved  error" + error);
-                        //AndroidUtil.showToast(MainActivity.this, R.string.server_error_remove_contact);                          
-                    }
-
-                    @Override
-                    public void success(RestResponse arg0, Response arg1) {
-                        Log.d(TAG, " onContactRemoved  success " + arg0);
-                        //contactListFragment.refresh();
-                        //AndroidUtil.showToast(MainActivity.this, " 成功 "  ); 
-                        
-                    }});
-				
+				//SKYMODIFY 
+				SkyUserManager.getInstances().onContactDeleted( MainActivity.this,username);				
 			}
 			runOnUiThread(new Runnable() {
 				public void run() {

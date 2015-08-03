@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity {
 				DemoApplication.getInstance().setUserName(currentUsername);
 				DemoApplication.getInstance().setPassword(currentPassword);
              	//SKYMODIFY
- 				SkyUserManager.getInstances().save(currentUsername,currentPassword);
+ 				SkyUserManager.getInstances().saveAccount(currentUsername,currentPassword);
 				try {
 					// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
 					// ** manually load all local groups and
