@@ -39,6 +39,7 @@ import com.easemob.chatuidemo.R;
 import com.skytech.chatim.ui.AboutActivity;
 import com.skytech.chatim.ui.BindWebexActivity;
 import com.skytech.chatim.ui.PersonInfoActivity;
+import com.umeng.update.UmengUpdateAgent;
 
 /**
  * 设置界面
@@ -171,6 +172,8 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		((LinearLayout) getView().findViewById(R.id.webexInfo)).setOnClickListener(this);
 		((LinearLayout) getView().findViewById(R.id.personInfo)).setOnClickListener(this);	
 		((LinearLayout) getView().findViewById(R.id.about)).setOnClickListener(this);	
+		((LinearLayout) getView().findViewById(R.id.check_update)).setOnClickListener(this);			
+		
 		blacklistContainer.setOnClickListener(this);
 		rl_switch_notification.setOnClickListener(this);
 		rl_switch_sound.setOnClickListener(this);
@@ -344,7 +347,10 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	            break;
          case R.id.about:
              startActivity(new Intent(getActivity(), AboutActivity.class));	            
-	            break;	            
+	            break;	     
+         case R.id.check_update:
+        	 UmengUpdateAgent.forceUpdate(getActivity());            
+	            break;	          
 		default:
 			break;
 		}

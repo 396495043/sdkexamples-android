@@ -71,6 +71,7 @@ import com.easemob.util.HanziToPinyin;
 import com.easemob.util.NetUtils;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity implements EMEventListener {
 
@@ -107,7 +108,9 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		//SKYMODIFY
+		UmengUpdateAgent.setUpdateOnlyWifi(false);
+	    UmengUpdateAgent.update(this);
 		if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
 			// 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
 			// 三个fragment里加的判断同理
