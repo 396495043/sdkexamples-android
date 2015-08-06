@@ -128,8 +128,9 @@ public class SkyUserManager {
 	}
 
 	public boolean isFilterUser(User user, String prefixString) {
-		return user.getUsername().indexOf(prefixString) >= 0
-				|| user.getNick().indexOf(prefixString) >= 0;
+		prefixString = prefixString.trim().toLowerCase();
+		return user.getUsername().toLowerCase().indexOf(prefixString) >= 0
+				|| user.getNick().toLowerCase().indexOf(prefixString) >= 0;
 	}
 
 	public void fisrtGetInfo(final Activity activity,

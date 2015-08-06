@@ -6,6 +6,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.easemob.chatuidemo.BuildConfig;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
 
@@ -29,6 +30,9 @@ public class AboutActivity extends BaseActivity {
 		try {
 			PackageInfo packinfo = pm.getPackageInfo(getPackageName(), 0);
 			String version = packinfo.versionName;
+			if (BuildConfig.DEBUG){
+				version += "  debug" ;
+			}
 			return version;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();

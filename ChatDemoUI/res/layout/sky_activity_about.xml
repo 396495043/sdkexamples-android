@@ -50,7 +50,7 @@
             <TextView
                 android:id="@+id/tv_about"
                 style="@style/sky_text_value_style"
-                android:text="科天云 通讯内部开发版，\n广州科天智慧云信息科技有限公司版权所有\n有问题可以联系zhongqi.chen@tcl.com.也可以直接用IM联系" />
+                android:text="科天云通讯内部开发版，\n有问题可以联系zhongqi.chen也可以直接用科天云通讯联系" />
 
             <TextView
                 android:id="@+id/tv_version"
