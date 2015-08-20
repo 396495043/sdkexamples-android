@@ -6,6 +6,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.widget.TextView;
 
+
 import com.easemob.chatuidemo.BuildConfig;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
