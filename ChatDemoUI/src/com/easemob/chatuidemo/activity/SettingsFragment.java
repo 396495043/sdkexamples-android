@@ -36,6 +36,7 @@ import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKModel;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.ui.AboutActivity;
 import com.skytech.chatim.ui.BindWebexActivity;
 import com.skytech.chatim.ui.PersonInfoActivity;
@@ -349,7 +350,9 @@ public class SettingsFragment extends Fragment implements OnClickListener {
              startActivity(new Intent(getActivity(), AboutActivity.class));	            
 	            break;	     
          case R.id.check_update:
-        	 UmengUpdateAgent.forceUpdate(getActivity());            
+           	 AndroidUtil.showToast(getActivity(), R.string.checkUpdateToast);
+        	 UmengUpdateAgent.update(getActivity());
+        	// UmengUpdateAgent.forceUpdate(getActivity());           
 	            break;	          
 		default:
 			break;

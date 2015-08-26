@@ -66,7 +66,7 @@ public class BindWebexActivity extends BaseActivity   {
             setToSkyUser();
             finish();
         }else{
-            AndroidUtil.showToast(this,"绑定失败，输入信息错误");
+            AndroidUtil.showToast(this,"绑定失败，输入信息错误，注意不能用科天SSO帐号直接绑定");
         }
     }
 

@@ -120,7 +120,7 @@ public class LoginActivity extends BaseActivity {
 	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
 	            login(null); 
 	        }else{
-	        	if (BuildConfig.DEBUG){
+	        	if ( AndroidUtil.isTestService(this) || BuildConfig.DEBUG ){
 		        	usernameEditText.setText("zhongqi.chen");
 		    		passwordEditText.setText("Pass1234");
 	        	}
