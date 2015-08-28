@@ -41,5 +41,5 @@
     <string name="about">关于</string>
     <string name="check_update">检查更新</string>
     <string name="meeting">会议</string>
-    <string name="checkUpdateToast">在后台检查更新</string>
+    <string name="checkUpdateToast">在后台检查更新,没有更新不会提示</string>
 </resources>
