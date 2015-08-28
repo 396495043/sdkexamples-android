@@ -110,6 +110,7 @@ import com.skytech.chatim.proxy.ChatAction;
 import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
+import com.skytech.chatim.sky.util.DataUtil;
 import com.skytech.chatim.ui.ContactInfoActivity;
 
 /**
@@ -217,6 +218,34 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 		activityInstance = this;
 		initView();
 		setUpView();
+		//SKYMODIFY
+		dealSendContent();
+	}
+
+	/** SKYMODIFY
+	 *  添加 共享 send 处理。
+	 */
+	private void dealSendContent() {
+		Intent intent = getIntent();
+		Bundle extras = intent.getExtras();
+		if (extras.containsKey(Intent.EXTRA_SUBJECT)) {
+			String text = extras.getString(Intent.EXTRA_SUBJECT);
+			if (!DataUtil.isEmpty(text)){
+				sendText(text);
+			}
+		}
+		if (extras.containsKey(Intent.EXTRA_TEXT)) {
+			String text = extras.getString(Intent.EXTRA_TEXT);
+			if (!DataUtil.isEmpty(text)){
+				sendText(text);
+			}
+		}
+		if (extras.containsKey(Intent.EXTRA_STREAM)) {
+			Uri uri = (Uri) extras.get(Intent.EXTRA_STREAM);
+			if (uri != null){
+				sendPicByUri(uri);
+			}
+		}
 	}
 
 	/**
