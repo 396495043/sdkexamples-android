@@ -14,6 +14,7 @@
 package com.easemob.chatuidemo.activity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,8 +122,10 @@ public class LoginActivity extends BaseActivity {
 	            login(null); 
 	        }else{
 	        	if ( AndroidUtil.isTestService(this) || BuildConfig.DEBUG ){
-		        	usernameEditText.setText("zhongqi.chen");
-		    		passwordEditText.setText("Pass1234");
+		        	//usernameEditText.setText("zhongqi.chen");
+		    		//passwordEditText.setText(DataUtil.Pass2);
+		        	usernameEditText.setText("zhongqi.chen@tcl.com");
+		    		passwordEditText.setText(DataUtil.Pass1);
 	        	}
 	        }
 		}
@@ -324,8 +327,9 @@ public class LoginActivity extends BaseActivity {
 		List<User> users = new ArrayList<User>(userlist.values());
 		dao.saveContactList(users);
 		//SKYMODIFY
-		SkyUserManager.getInstances().fisrtGetInfo(this,userlist);
-
+		// 第一次需要取一下全部信息
+		Collection<User> userCollection = userlist.values();
+		SkyUserManager.getInstances().refreshUserInfoInBg(this,userCollection);
 	}
 	
 	/**
@@ -334,7 +338,8 @@ public class LoginActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void register(View view) {
-	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n用户名，邮箱@前的字符串，比如张军，jun.z，密码Pass1234");
+	    //SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n用户名，邮箱@前的字符串，比如张军，jun.z，密码Pass1234");
+	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n帐号为科天 meeting site 的帐号");
 		//startActivityForResult(new Intent(this, RegisterActivity.class), 0);
 	}
 

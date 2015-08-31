@@ -1,8 +1,8 @@
 package com.skytech.chatim.proxy;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -133,22 +133,23 @@ public class SkyUserManager {
 				|| user.getNick().toLowerCase().indexOf(prefixString) >= 0;
 	}
 
-	public void fisrtGetInfo(final Activity activity,
-			final Map<String, User> userlist) {
-
+	public void refreshUserInfoInBg(final Activity activity,final Collection<User> userList) {
 		new Thread() {
 			@Override
 			public void run() {
-				Set<String> users = userlist.keySet();
-				final ServerInterface serverInterface = RetrofitClient
-						.getServerInterface();
-				for (Iterator iterator = users.iterator(); iterator.hasNext();) {
-					String userName = (String) iterator.next();
-					refreshUserInfo(activity, serverInterface, userName);
-				}
+				refreshUserInfo(activity,userList);
 			}
 		}.start();
-
+	}
+	
+	public void refreshUserInfo(final Activity activity,Collection<User> userList) {
+		final ServerInterface serverInterface = RetrofitClient
+				.getServerInterface();
+		for (Iterator iterator = userList.iterator(); iterator.hasNext();) {
+			User user = (User) iterator.next();
+			String userName = user.getUsername();
+			refreshUserInfo(activity, serverInterface, userName);
+		}
 	}
 
 	private void refreshUserInfo(final Activity activity,
