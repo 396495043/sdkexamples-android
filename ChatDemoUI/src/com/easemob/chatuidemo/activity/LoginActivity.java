@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d(TAG,"com.skytech.chatim.debug");
 		// 如果用户名密码都有，直接进入主页面
 		//SKYMODIFY forbid old hx  login
 		if (DemoHXSDKHelper.getInstance().isLogined() && SkyUserManager.getInstances().isAllowHxAutoLogin()) {
@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity {
 	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
 	            login(null); 
 	        }else{
-	        	if ( AndroidUtil.isTestService(this) || BuildConfig.DEBUG ){
+	        	if ( AndroidUtil.isTestService(this)){
 		        	//usernameEditText.setText("zhongqi.chen");
 		    		//passwordEditText.setText(DataUtil.Pass2);
 		        	usernameEditText.setText("zhongqi.chen@tcl.com");
@@ -272,10 +272,15 @@ public class LoginActivity extends BaseActivity {
 
 
 	private void initializeContacts() {
-		//SKYMODIFY  不是第一次，直接从本地取
+		//SKYMODIFY  不是第一次，直接从本地取,如果取少了，发生错误，会重现去取。
 		if (!SkyUserManager.getInstances().isFirstRun(this)){
-			SkyUserManager.getInstances().getUserFromDB(this);
-			return ;
+			Map<String, User> userlist = SkyUserManager.getInstances().getUserFromDB(this);
+			if (userlist.size() > 5){
+				DemoApplication.getInstance().setContactList(userlist);
+				return ;
+			}else{
+				Log.d(TAG, " not FirstRun userlist " + userlist);
+			}
 		}
 		Map<String, User> userlist = new HashMap<String, User>();
 		//SKYMODIFY  以前 demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定

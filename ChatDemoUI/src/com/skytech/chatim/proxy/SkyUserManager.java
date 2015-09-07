@@ -117,17 +117,16 @@ public class SkyUserManager {
 		if (DataUtil.isEmpty(DataUtil.readFromPreferences(activity,
 				DataUtil.HasRun))) {
 			DataUtil.writeToPreferences(activity, DataUtil.HasRun, "HasRun");
+			Log.d(TAG, " isFirstRun " );
 			return true;
 		}
 		return false;
 	}
 
-	public void getUserFromDB(Activity activity) {
+	public Map<String, User> getUserFromDB(Activity activity) {
 		UserDao dao = new UserDao(activity);
 		Map<String, User> userlist = dao.getContactList();
-
-		// 存入内存
-		DemoApplication.getInstance().setContactList(userlist);
+		return userlist ;
 	}
 
 	public boolean isFilterUser(User user, String prefixString) {

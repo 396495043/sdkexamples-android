@@ -6,10 +6,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.widget.TextView;
 
-
 import com.easemob.chatuidemo.BuildConfig;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
+import com.skytech.chatim.proxy.DebugTool;
 
 public class AboutActivity extends BaseActivity {
     private static String TAG = AboutActivity.class.getSimpleName();
@@ -32,7 +32,7 @@ public class AboutActivity extends BaseActivity {
 			PackageInfo packinfo = pm.getPackageInfo(getPackageName(), 0);
 			String version = packinfo.versionName;
 			if (BuildConfig.DEBUG){
-				version += "  debug" ;
+				version += DebugTool.getDebugVersion(this) ;
 			}
 			return version;
 		} catch (NameNotFoundException e) {
