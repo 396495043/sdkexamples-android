@@ -22,10 +22,10 @@ import com.easemob.chatuidemo.R;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.sky.util.DataUtil;
+import com.skytech.chatim.sky.vo.JoinLinkPara;
 import com.skytech.chatim.sky.vo.MeetingLinkResponse;
-import com.skytech.chatim.sky.vo.WebexAccount;
+import com.skytech.chatim.sky.vo.StartLinkPara;
 import com.skytech.chatim.sky.xmlapi.WebexAPIConstant;
-import com.skytech.chatim.ui.BindWebexActivity;
 
 
 /**
@@ -47,21 +47,22 @@ public class SkyProductManager {
     }
 
 
-    public  ChatAction  getSendText(Activity activity ,String from, String to) {
+    public  ChatAction  getChatAction(Activity activity ,String from, String to) {
         String text = from + activity.getString(R.string.webexInvite);
         String link =  getPMRLink(activity) ; 
         String [] sendTexts = { text ,link } ;
-        ChatAction chatAction = new ChatAction();
+        ChatAction chatAction = new ChatAction(activity);
         chatAction.setSendTexts(sendTexts);
         return chatAction ;
     }
 
 
     public String getPMRLink(Activity activity) {
-        String userName = DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_USERNAME);
-        userName = userName.replace("@", "");
-        String site =  DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_SITE);
-        return "https://"+site+".webex.com.cn/meet/"+userName+SKYMK+ DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_PMR_MEETING_KEY);
+//        String userName = DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_USERNAME);
+//        userName = userName.replace("@", "");
+//        String site =  DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_SITE);
+//       String meetingKey =  DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_PMR_MEETING_KEY)
+        return "https://%siteName%.webex.com.cn/meet/%userName%"+SKYMK+ "%meetingKey%";
     }
 
 
@@ -120,8 +121,10 @@ public class SkyProductManager {
                     return ;
                 }
                 String mk = parserMK(mUrl);
-                startOrjoinMeeting((Activity)widget.getContext(),mk);
+                String siteName = parserSite(mUrl);
+                startOrjoinMeeting((Activity)widget.getContext(),mk ,siteName,null);
         }
+
 
     }
 
@@ -130,45 +133,61 @@ public class SkyProductManager {
         return url.substring(index + SKYMK.length());
     }
     
-    public static void startOrjoinMeeting(final Activity activity, String mk) {
+	private static String parserSite(String url) {
+		try {
+			URL myURL = new URL(url);
+			String host = myURL.getHost().trim();
+			int index = host.indexOf(".");
+			String siteName = host.substring(0, index);
+			return siteName;
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+    public static void startOrjoinMeeting(final Activity activity, String mk, String siteName ,final ChatAction chatAction) {
         final ServerInterface serverInterface = RetrofitClient
                 .getServerInterface();
         if (mk == null){
             mk ="";
         }
-        final ProgressDialog pd = AndroidUtil.getProgressDialog(activity, "");
+        Log.e(TAG, " startOrjoinMeeting mk " + mk
+                + " chatAction " + chatAction);
+        final ProgressDialog pd = AndroidUtil.getProgressDialog(activity, activity.getString(R.string.getMeetingInfo));
         pd.show();
-        if (mk.endsWith(DataUtil.readFromPreferences(activity,
-                        WebexAPIConstant.WBX_PMR_MEETING_KEY))){
-                // 自己的personnal meeting ，不用join ，还是start 
-                            mk ="" ;
-                        }
-        WebexAccount webexAccount = new WebexAccount(
-                DataUtil.readFromPreferences(activity,
-                        WebexAPIConstant.WBX_USERNAME),
-                DataUtil.readFromPreferences(activity,
-                        WebexAPIConstant.WBX_PASSWORD),
-                DataUtil.readFromPreferences(activity,
-                        WebexAPIConstant.WBX_SITE),mk);
-        serverInterface.getMeetingLink(webexAccount,
-                new Callback<MeetingLinkResponse>() {
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, " getMeetingLink  error" + error
-                                + " getBody " + error.getBody());
-                        AndroidUtil.closeDialog(pd);
-                    }
+//		if (mk.endsWith(DataUtil.readFromPreferences(activity,
+//				WebexAPIConstant.WBX_PMR_MEETING_KEY))) {
+//			// 自己的personnal meeting ，不用join ，还是start
+//			mk = "";
+//		}
+        Callback<MeetingLinkResponse> callback = new Callback<MeetingLinkResponse>() {
+		    @Override
+		    public void failure(RetrofitError error) {
+		        Log.e(TAG, " getMeetingLink  error" + error
+		                + " getBody " + error.getBody());
+		        AndroidUtil.closeDialog(pd);
+		    }
 
-                    @Override
-                    public void success(MeetingLinkResponse response,
-                            Response arg1) {
-                        Log.d(TAG, " get MeetingLinkResponse " + response);
-                        AndroidUtil.closeDialog(pd);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(response.getResult().getUrl()));
-                        activity.startActivity(intent);
-                    }
-                });
+		    @Override
+		    public void success(MeetingLinkResponse response,
+		            Response arg1) {
+		        Log.d(TAG, " get MeetingLinkResponse " + response);
+		        AndroidUtil.closeDialog(pd);
+		        Intent intent = new Intent(Intent.ACTION_VIEW);
+		        intent.setData(Uri.parse(response.getResult().getUrl()));
+		        activity.startActivity(intent);
+		        if (chatAction!=null){
+		        	chatAction.sendText(response.getResult());
+		        }
+		    }
+		};
+		String uid = SkyUserManager.getInstances().getSkyUser().getUid();
+		if (DataUtil.isEmpty(mk)) { // start link
+			StartLinkPara linkPara = new StartLinkPara(uid, true);
+			serverInterface.getMeetingStartLink(linkPara, callback);
+		} else {
+			JoinLinkPara linkPara = new JoinLinkPara(siteName, mk);
+			serverInterface.getMeetingJoinLink(linkPara, callback);
+		}
     }
 
 
@@ -180,11 +199,11 @@ public class SkyProductManager {
             DownloadUtil.downloadWebex(activity);
             return true  ;
         }
-        if (DataUtil.isEmpty(MK)){
-            AndroidUtil.showLongToast(activity, activity.getString(R.string.needBindWebex));
-            activity.startActivity(new Intent(activity, BindWebexActivity.class));     
-            return true ;
-        }
+//        if (DataUtil.isEmpty(MK)){
+//            AndroidUtil.showLongToast(activity, activity.getString(R.string.needBindWebex));
+//            activity.startActivity(new Intent(activity, BindWebexActivity.class));     
+//            return true ;
+//        }
         return false ;
         
     }

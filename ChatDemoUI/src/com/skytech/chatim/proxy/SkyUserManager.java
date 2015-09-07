@@ -1,7 +1,9 @@
 package com.skytech.chatim.proxy;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -14,6 +16,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.easemob.chatuidemo.DemoApplication;
+import com.easemob.chatuidemo.activity.LoginActivity;
 import com.easemob.chatuidemo.db.UserDao;
 import com.easemob.chatuidemo.domain.User;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
@@ -148,8 +151,16 @@ public class SkyUserManager {
 		for (Iterator iterator = userList.iterator(); iterator.hasNext();) {
 			User user = (User) iterator.next();
 			String userName = user.getUsername();
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
 			refreshUserInfo(activity, serverInterface, userName);
 		}
+//		UserDao dao = new UserDao(activity);
+//		ArrayList<User> list = new ArrayList<User>();
+//		list.addAll(userList);
+//		dao.saveContactList(list);
 	}
 
 	private void refreshUserInfo(final Activity activity,

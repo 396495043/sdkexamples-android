@@ -805,13 +805,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
             String from = SkyUserManager.getInstances().getSkyUser().getNickName();
             String to = toChatUsername;
             ChatAction chatAction = SkyProductManager.getInstances()
-                    .getSendText(this,from, to);
-            String[] sendTexts = chatAction.getSendTexts();
-            if (sendTexts != null) {
-                for (int i = 0; i < sendTexts.length; i++) {
-                    sendText(sendTexts[i]);
-                }
-            }
+                    .getChatAction(this,from, to);
             chatAction.action(this);
 
         }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.easemob.chatuidemo"
-      android:versionCode="13"
-    android:versionName="0.1.13" >
+      android:versionCode="14"
+    android:versionName="0.1.14" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -348,7 +348,7 @@
         <!-- 设置环信应用的appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="czqskytech#czqim" />
+            android:value="czqskytech#skytechim" />
         <!-- 声明sdk所需的service -->
         <service android:name="com.easemob.chat.EMChatService" />
 
