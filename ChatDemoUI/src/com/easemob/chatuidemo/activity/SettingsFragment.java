@@ -355,8 +355,10 @@ public class SettingsFragment extends Fragment implements OnClickListener {
            	 AndroidUtil.showToast(getActivity(), R.string.checkUpdateToast);
         	 UmengUpdateAgent.update(getActivity());
          case R.id.refreshAllContact:
-           	 AndroidUtil.showToast(getActivity(), R.string.refreshAllContactToast);
-        	 SkyUserManager.getInstances().refreshContact(getActivity());          
+           	 //AndroidUtil.showToast(getActivity(), R.string.refreshAllContactToast);
+        	 //SkyUserManager.getInstances().refreshContact(getActivity()); 
+        	 SkyUserManager.getInstances().setFirstRun(getActivity());
+        	 logout();
 	         break;	          
 		default:
 			break;

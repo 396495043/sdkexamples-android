@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.easemob.chatuidemo.DemoApplication;
@@ -123,6 +124,10 @@ public class SkyUserManager {
 		return false;
 	}
 
+	
+	public void setFirstRun(Activity activity) {
+		DataUtil.writeToPreferences(activity, DataUtil.HasRun, "");
+	}
 	public Map<String, User> getUserFromDB(Activity activity) {
 		UserDao dao = new UserDao(activity);
 		Map<String, User> userlist = dao.getContactList();
@@ -293,5 +298,7 @@ public class SkyUserManager {
 				});
 
 	}
+
+
 
 }
