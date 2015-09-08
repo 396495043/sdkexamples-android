@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity {
 		}
 		
 		//SKYMODIFY aoto login 
-		usernameEditText.setText(SkyUserManager.getInstances().getUserName());
+		usernameEditText.setText(SkyUserManager.getInstances().getLoginUserName());
 		passwordEditText.setText(SkyUserManager.getInstances().getPassword());
 		
 		if (getIntent().getStringExtra(DataUtil.IntentKey)!=null){     

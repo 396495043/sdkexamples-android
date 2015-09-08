@@ -85,6 +85,10 @@ public class SkyUserManager {
 	}
 
 	public String getUserName() {
+		return skyUser.getUid();
+	}
+	
+	public String getLoginUserName() {
 		Context context = DemoApplication.getInstance();
 		return DataUtil.readGlobalPreferences(context, DataUtil.SKY_USERNAME);
 	}
