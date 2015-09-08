@@ -36,6 +36,7 @@ import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKModel;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.ui.AboutActivity;
 import com.skytech.chatim.ui.BindWebexActivity;
@@ -173,7 +174,8 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		((LinearLayout) getView().findViewById(R.id.webexInfo)).setOnClickListener(this);
 		((LinearLayout) getView().findViewById(R.id.personInfo)).setOnClickListener(this);	
 		((LinearLayout) getView().findViewById(R.id.about)).setOnClickListener(this);	
-		((LinearLayout) getView().findViewById(R.id.check_update)).setOnClickListener(this);			
+		((LinearLayout) getView().findViewById(R.id.check_update)).setOnClickListener(this);
+		((LinearLayout) getView().findViewById(R.id.refreshAllContact)).setOnClickListener(this);		
 		
 		blacklistContainer.setOnClickListener(this);
 		rl_switch_notification.setOnClickListener(this);
@@ -352,8 +354,10 @@ public class SettingsFragment extends Fragment implements OnClickListener {
          case R.id.check_update:
            	 AndroidUtil.showToast(getActivity(), R.string.checkUpdateToast);
         	 UmengUpdateAgent.update(getActivity());
-        	// UmengUpdateAgent.forceUpdate(getActivity());           
-	            break;	          
+         case R.id.refreshAllContact:
+           	 AndroidUtil.showToast(getActivity(), R.string.refreshAllContactToast);
+        	 SkyUserManager.getInstances().refreshContact(getActivity());          
+	         break;	          
 		default:
 			break;
 		}

@@ -44,6 +44,7 @@ import com.easemob.chat.EMVideoCallHelper;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.utils.CameraHelper;
 import com.easemob.exceptions.EMServiceNotReadyException;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 public class VideoCallActivity extends CallActivity implements OnClickListener {
 
@@ -122,6 +123,10 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
 
         // 设置通话人
         nickTextView.setText(username);
+        
+
+		//SKYMODIFY
+		nickTextView.setText(SkyUserUtils.getNickName(username));
 
         // 显示本地图像的surfaceview
         localSurface = (SurfaceView) findViewById(R.id.local_surface);

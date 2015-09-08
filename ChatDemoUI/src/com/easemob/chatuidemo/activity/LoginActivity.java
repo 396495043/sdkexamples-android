@@ -276,6 +276,7 @@ public class LoginActivity extends BaseActivity {
 		if (!SkyUserManager.getInstances().isFirstRun(this)){
 			Map<String, User> userlist = SkyUserManager.getInstances().getUserFromDB(this);
 			if (userlist.size() > 5){
+				userlist.remove(Constant.CHAT_ROBOT); // 不显示robot 
 				DemoApplication.getInstance().setContactList(userlist);
 				return ;
 			}else{

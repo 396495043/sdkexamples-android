@@ -13,6 +13,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
+import com.skytech.chatim.proxy.DebugTool;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.sky.util.DataUtil;
 
@@ -91,6 +92,7 @@ public class SplashActivity extends BaseActivity {
 		try {
 			PackageInfo packinfo = pm.getPackageInfo(getPackageName(), 0);
 			String version = packinfo.versionName;
+			version += DebugTool.getDebugVersion(this) ;
 			return version;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();

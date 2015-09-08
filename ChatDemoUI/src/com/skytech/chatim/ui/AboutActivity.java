@@ -31,9 +31,7 @@ public class AboutActivity extends BaseActivity {
 		try {
 			PackageInfo packinfo = pm.getPackageInfo(getPackageName(), 0);
 			String version = packinfo.versionName;
-			if (BuildConfig.DEBUG){
-				version += DebugTool.getDebugVersion(this) ;
-			}
+			version += DebugTool.getDebugVersion(this) ;
 			return version;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();

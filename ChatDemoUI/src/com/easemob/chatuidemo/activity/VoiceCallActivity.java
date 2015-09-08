@@ -40,6 +40,7 @@ import com.easemob.chat.EMCallStateChangeListener;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chatuidemo.R;
 import com.easemob.exceptions.EMServiceNotReadyException;
+import com.skytech.chatim.proxy.SkyUserUtils;
 
 /**
  * 语音通话页面
@@ -109,6 +110,12 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 
 		// 设置通话人
 		nickTextView.setText(username);
+		
+		//SKYMODIFY
+		nickTextView.setText(SkyUserUtils.getNickName(username));
+		ImageView avatar = (ImageView) findViewById(R.id.swing_card);
+		SkyUserUtils.setUserAvatar(this, username, avatar);
+		
 		if (!isInComingCall) {// 拨打电话
 			soundPool = new SoundPool(1, AudioManager.STREAM_RING, 0);
 			outgoing = soundPool.load(this, R.raw.outgoing, 1);

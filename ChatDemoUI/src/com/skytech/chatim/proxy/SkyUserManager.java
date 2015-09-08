@@ -144,6 +144,20 @@ public class SkyUserManager {
 		}.start();
 	}
 	
+
+	public void refreshContact(final Activity activity) {
+		new Thread() {
+			@Override
+			public void run() {
+				Collection<User> users = DemoApplication.getInstance()
+						.getContactList().values();
+				ArrayList<User> userList = new ArrayList<User>();
+				userList.addAll(users);
+				refreshUserInfo(activity, userList);
+			}
+		}.start();
+	}
+	
 	public void refreshUserInfo(final Activity activity,Collection<User> userList) {
 		final ServerInterface serverInterface = RetrofitClient
 				.getServerInterface();
