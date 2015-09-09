@@ -170,7 +170,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
 		
 		
 		//内部测试方法，请忽略
-		registerInternalDebugReceiver();
+		//registerInternalDebugReceiver(); 		//SKYMODIFY
 	}
 
 

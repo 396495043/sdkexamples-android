@@ -342,18 +342,20 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		case R.id.ll_set_push_nick:
 			startActivity(new Intent(getActivity(), OfflinePushNickActivity.class));
 			break;
+		//SKYMODIFY	
 	     case R.id.personInfo:
 	            startActivity(new Intent(getActivity(), PersonInfoActivity.class));
 	         break;
          case R.id.webexInfo:
              startActivity(new Intent(getActivity(), BindWebexActivity.class));	            
-	            break;
+	         break;
          case R.id.about:
              startActivity(new Intent(getActivity(), AboutActivity.class));	            
-	            break;	     
+	         break;	     
          case R.id.check_update:
            	 AndroidUtil.showToast(getActivity(), R.string.checkUpdateToast);
         	 UmengUpdateAgent.update(getActivity());
+	         break;	       	 
          case R.id.refreshAllContact:
            	 //AndroidUtil.showToast(getActivity(), R.string.refreshAllContactToast);
         	 //SkyUserManager.getInstances().refreshContact(getActivity()); 
