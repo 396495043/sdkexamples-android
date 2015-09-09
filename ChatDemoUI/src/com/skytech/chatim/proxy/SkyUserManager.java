@@ -304,5 +304,12 @@ public class SkyUserManager {
 	}
 
 
-
+    public  void setDbUserInfo(User user, String username,
+			Map<String, User> dbUserlist) {
+		User dbUser = dbUserlist.get(username);
+		if (dbUser!=null){
+			user.setNick(dbUser.getNick());
+			user.setAvatar(dbUser.getAvatar());
+		}
+	}
 }

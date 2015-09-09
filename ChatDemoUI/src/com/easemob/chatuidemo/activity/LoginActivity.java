@@ -273,15 +273,10 @@ public class LoginActivity extends BaseActivity {
 
 	private void initializeContacts() {
 		//SKYMODIFY  不是第一次，直接从本地取,如果取少了，发生错误，会重现去取。
-		if (!SkyUserManager.getInstances().isFirstRun(this)){
-			Map<String, User> userlist = SkyUserManager.getInstances().getUserFromDB(this);
-			if (userlist.size() > 5){
-				DemoApplication.getInstance().setContactList(userlist);
-				return ;
-			}else{
-				Log.d(TAG, " not FirstRun userlist " + userlist);
-			}
-		}
+        Log.d(TAG,"  initializeContacts ") ;
+		UserDao dao = new UserDao(this);
+		Map<String, User> dbUserlist = dao.getContactList();
+		
 		Map<String, User> userlist = new HashMap<String, User>();
 		//SKYMODIFY  以前 demo中简单的处理成每次登陆都去获取好友username，开发者自己根据情况而定
 		// 现在还用以前的设定
@@ -297,6 +292,8 @@ public class LoginActivity extends BaseActivity {
 			User user = new User();
 			//nickName 缺省也是用的是 username
 			user.setUsername(username);
+			MainActivity.setUserHearder(username, user);
+            SkyUserManager.getInstances().setDbUserInfo(user,username,dbUserlist); 
 			userlist.put(username, user);
 		}
 		
@@ -306,6 +303,7 @@ public class LoginActivity extends BaseActivity {
 		String strChat = getResources().getString(
 				R.string.Application_and_notify);
 		newFriends.setNick(strChat);
+		newFriends.setHeader("");
 
 		userlist.put(Constant.NEW_FRIENDS_USERNAME, newFriends);
 		// 添加"群聊"
@@ -315,26 +313,35 @@ public class LoginActivity extends BaseActivity {
 		groupUser.setNick(strGroup);
 		groupUser.setHeader("");
 		userlist.put(Constant.GROUP_USERNAME, groupUser);
-		
+
+        // 添加"聊天室"
+       User chatRoomItem = new User();
+       String strChatRoom = getResources().getString(R.string.chat_room);
+       chatRoomItem.setUsername(Constant.CHAT_ROOM);
+       chatRoomItem.setNick(strChatRoom);
+       chatRoomItem.setHeader("");
+       userlist.put(Constant.CHAT_ROOM, chatRoomItem);
+       
 		// 添加"Robot"
-		//SKYMODIFY not use robot 
-//		User robotUser = new User();
-//		String strRobot = getResources().getString(R.string.robot_chat);
-//		robotUser.setUsername(Constant.CHAT_ROBOT);
-//		robotUser.setNick(strRobot);
-//		robotUser.setHeader("");
-//		userlist.put(Constant.CHAT_ROBOT, robotUser);
+		User robotUser = new User();
+		String strRobot = getResources().getString(R.string.robot_chat);
+		robotUser.setUsername(Constant.CHAT_ROBOT);
+		robotUser.setNick(strRobot);
+		robotUser.setHeader("");
+		userlist.put(Constant.CHAT_ROBOT, robotUser);
 		
 		// 存入内存
 		DemoApplication.getInstance().setContactList(userlist);
 		// 存入db
-		UserDao dao = new UserDao(LoginActivity.this);
+		//UserDao dao = new UserDao(LoginActivity.this);
 		List<User> users = new ArrayList<User>(userlist.values());
 		dao.saveContactList(users);
 		//SKYMODIFY
 		// 第一次需要取一下全部信息
-		Collection<User> userCollection = userlist.values();
-		SkyUserManager.getInstances().refreshUserInfoInBg(this,userCollection);
+		if (SkyUserManager.getInstances().isFirstRun(this)){
+			Collection<User> userCollection = userlist.values();
+			SkyUserManager.getInstances().refreshUserInfoInBg(this,userCollection);
+		}
 	}
 	
 	/**

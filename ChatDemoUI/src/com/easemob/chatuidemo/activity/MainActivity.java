@@ -220,7 +220,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                     User user = new User();
                     user.setUsername(username);
                     setUserHearder(username, user);
-                    setDbUserInfo(user,username,dbUserlist);                  
+                    SkyUserManager.getInstances().setDbUserInfo(user,username,dbUserlist);                  
                     userlist.put(username, user);
                 }
                 // 添加user"申请与通知"
@@ -269,17 +269,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 
             }
 
-            private void setDbUserInfo(User user, String username,
-					Map<String, User> dbUserlist) {
-				User dbUser = dbUserlist.get(username);
-				if (dbUser!=null){
-					user.setNick(dbUser.getNick());
-					user.setAvatar(dbUser.getAvatar());
-				}
-				
-			}
-
-			@Override
+            @Override
             public void onError(int error, String errorMsg) {
                 HXSDKHelper.getInstance().notifyContactsSyncListener(false);
             }
@@ -310,7 +300,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
      * @param username
      * @param user
      */
-    private static void setUserHearder(String username, User user) {
+    public static void setUserHearder(String username, User user) {
         String headerName = null;
         if (!TextUtils.isEmpty(user.getNick())) {
             headerName = user.getNick();
