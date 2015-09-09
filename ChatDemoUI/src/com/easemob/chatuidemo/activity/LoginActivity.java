@@ -209,8 +209,8 @@ public class LoginActivity extends BaseActivity {
 					return;
 				}
 				// 登陆成功，保存用户名密码
-				DemoApplication.getInstance().setUserName(currentUsername);
-				DemoApplication.getInstance().setPassword(currentPassword);
+				DemoApplication.getInstance().setUserName(hxUserName);
+				DemoApplication.getInstance().setPassword(hxPassword);
              	//SKYMODIFY
  				SkyUserManager.getInstances().saveAccount(currentUsername,currentPassword);
 				try {
@@ -276,7 +276,6 @@ public class LoginActivity extends BaseActivity {
 		if (!SkyUserManager.getInstances().isFirstRun(this)){
 			Map<String, User> userlist = SkyUserManager.getInstances().getUserFromDB(this);
 			if (userlist.size() > 5){
-				userlist.remove(Constant.CHAT_ROBOT); // 不显示robot 
 				DemoApplication.getInstance().setContactList(userlist);
 				return ;
 			}else{

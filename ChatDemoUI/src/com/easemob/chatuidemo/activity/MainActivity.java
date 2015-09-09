@@ -209,11 +209,18 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 
                 System.out.println("----------------"+usernames.toString());
                 EMLog.d("roster", "contacts size: " + usernames.size());
+                
+               //SKYMODIFY  从DB 中去取用户信息 
+                Log.d(TAG,"  asyncFetchContactsFromServer ") ;
+    			UserDao dao = new UserDao(context);
+    			Map<String, User> dbUserlist = dao.getContactList();
+     
                 Map<String, User> userlist = new HashMap<String, User>();
                 for (String username : usernames) {
                     User user = new User();
                     user.setUsername(username);
                     setUserHearder(username, user);
+                    setDbUserInfo(user,username,dbUserlist);                  
                     userlist.put(username, user);
                 }
                 // 添加user"申请与通知"
@@ -250,7 +257,7 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                  // 存入内存
                 DemoApplication.getInstance().setContactList(userlist);
                  // 存入db
-                UserDao dao = new UserDao(context);
+                //UserDao dao = new UserDao(context);
                 List<User> users = new ArrayList<User>(userlist.values());
                 dao.saveContactList(users);
 
@@ -262,7 +269,17 @@ public class MainActivity extends BaseActivity implements EMEventListener {
                 
             }
 
-            @Override
+            private void setDbUserInfo(User user, String username,
+					Map<String, User> dbUserlist) {
+				User dbUser = dbUserlist.get(username);
+				if (dbUser!=null){
+					user.setNick(dbUser.getNick());
+					user.setAvatar(dbUser.getAvatar());
+				}
+				
+			}
+
+			@Override
             public void onError(int error, String errorMsg) {
                 HXSDKHelper.getInstance().notifyContactsSyncListener(false);
             }
