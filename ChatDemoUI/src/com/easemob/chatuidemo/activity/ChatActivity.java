@@ -798,7 +798,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				videoCallBtn.setEnabled(false);
 				toggleMore(null);
 			}
-		}else if (id == R.id.btn_webex_call) { // webex通话
+		}else if (id == R.id.btn_webex_call) { //SKYMODIFY webex通话
 		    if (SkyProductManager.getInstances().notSupportWebex(this)){
 		        return ;
 		    }

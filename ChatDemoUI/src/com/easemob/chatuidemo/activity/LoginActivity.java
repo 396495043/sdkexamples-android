@@ -351,7 +351,7 @@ public class LoginActivity extends BaseActivity {
 	 */
 	public void register(View view) {
 	    //SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n用户名，邮箱@前的字符串，比如张军，jun.z，密码Pass1234");
-	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n帐号为科天 meeting site 的帐号");
+	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。请用已经分配的科天云帐号直接登陆");
 		//startActivityForResult(new Intent(this, RegisterActivity.class), 0);
 	}
 

@@ -35,7 +35,7 @@ import com.skytech.chatim.sky.xmlapi.WebexAPIConstant;
  */
 
 public class SkyProductManager {
-    private static final String SKYMK = "?SKYMK=";
+    static final String SKYMK = "?SKYMK=";
     private static String TAG = SkyProductManager.class.getSimpleName();
     private static SkyProductManager instantce = new SkyProductManager() ;
 
@@ -49,7 +49,7 @@ public class SkyProductManager {
 
     public  ChatAction  getChatAction(Activity activity ,String from, String to) {
         String text = from + activity.getString(R.string.webexInvite);
-        String link =  getPMRLink(activity) ; 
+        String link =  ""; 
         String [] sendTexts = { text ,link } ;
         ChatAction chatAction = new ChatAction(activity);
         chatAction.setSendTexts(sendTexts);
@@ -57,13 +57,7 @@ public class SkyProductManager {
     }
 
 
-    public String getPMRLink(Activity activity) {
-//        String userName = DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_USERNAME);
-//        userName = userName.replace("@", "");
-//        String site =  DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_SITE);
-//       String meetingKey =  DataUtil.readFromPreferences(activity, WebexAPIConstant.WBX_PMR_MEETING_KEY)
-        return "https://%siteName%.webex.com.cn/meet/%userName%"+SKYMK+ "%meetingKey%";
-    }
+
 
 
     public void managerSpan(TextView tv) {
@@ -165,6 +159,7 @@ public class SkyProductManager {
 		        Log.e(TAG, " getMeetingLink  error" + error
 		                + " getBody " + error.getBody());
 		        AndroidUtil.closeDialog(pd);
+		        AndroidUtil.showToast(activity, R.string.getMeetingInfoError);
 		    }
 
 		    @Override

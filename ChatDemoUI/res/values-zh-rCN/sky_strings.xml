@@ -9,12 +9,12 @@
     <string name="userName">用户名</string>
     <string name="nickName">昵称</string>
     <string name="email">邮箱</string>
-    <string name="webexInvite"> 发出一个webex 会议链接, 邀请加入会议</string>
+    <string name="webexInvite"> 发出一个webex 会议链接, 邀请您加入会议</string>
     <string name="needInstallWebex">你需要先安装webex客户端才能使用此功能,你需要下载此软件吗？</string>
     <string name="downloadWebexMes">已经在后台帮你下载Webex会议客户端，下载完成后会提示你安装</string>
     <string name="downloadWebex">已经在后台帮你下载Webex会议客户端，下载完成后会提示你安装</string>
     <string name="needBindWebex">请先在设置中绑定webex账号</string>
-    <string name="login_error">登陆错误</string>
+    <string name="login_error">登陆错误，请检查你的用户名和密码</string>
     <string name="personInfo">用户信息</string>
     <string name="contactInfo">好友信息</string>
     <string name="registerPending">目前注册尚未开放</string>
@@ -45,4 +45,5 @@
     <string name="getMeetingInfo">正在取会议信息</string>
     <string name="refreshAllContact">重登陆刷新所有用户信息</string>
     <string name="refreshAllContactToast">正在后台刷新所有用户信息</string>
+    <string name="getMeetingInfoError">取会议信息错误</string>
 </resources>

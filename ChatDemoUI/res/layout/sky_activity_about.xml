@@ -50,14 +50,28 @@
             <TextView
                 android:id="@+id/tv_about"
                 style="@style/sky_text_value_style"
-                android:text="科天云通讯内部开发版，\n有问题可以联系zhongqi.chen也可以直接用科天云通讯联系" />
+  				android:layout_gravity="center"
+                android:text="科天云通讯" />
+            
+
 
             <TextView
                 android:id="@+id/tv_version"
                 style="@style/sky_text_value_style"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
                 android:text="版本    " />
+            
+             <TextView
+                style="@style/sky_text_value_style"
+                android:layout_gravity="center"
+                android:autoLink="web"
+                android:text="科天网站  http://www.ketianyun.com/" />
+             
+             <TextView
+               android:id="@+id/tv_about"
+               style="@style/sky_text_value_style"
+               android:autoLink="all"
+               android:text="有问题,您可以联系zhongqi.chen@tcl.com，电话  13382413897,也可以直接用科天云通讯联系，邮箱即帐号。" />
         </LinearLayout>
     </LinearLayout>
 
