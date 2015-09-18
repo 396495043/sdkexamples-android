@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity {
 		        	//usernameEditText.setText("zhongqi.chen");
 		    		//passwordEditText.setText(DataUtil.Pass2);
 		        	usernameEditText.setText("zhongqi.chen@tcl.com");
-		    		passwordEditText.setText(DataUtil.Pass1);
+		    		passwordEditText.setText(DataUtil.Pass4);
 	        	}
 	        }
 		}

@@ -438,7 +438,8 @@ public class MessageAdapter extends BaseAdapter{
 		// 群聊时，显示接收的消息的发送人的名称
 		if ((chatType == ChatType.GroupChat || chatType == ChatType.ChatRoom) && message.direct == EMMessage.Direct.RECEIVE){
 		    //demo里使用username代码nick
-			holder.tv_usernick.setText(message.getFrom());
+			//SKYMODIFY 
+			holder.tv_usernick.setText(SkyUserUtils.getUser(message.getFrom()).getNick());
 		}
 		// 如果是发送的消息并且不是群聊消息，显示已读textview
 		if (!(chatType == ChatType.GroupChat || chatType == ChatType.ChatRoom) && message.direct == EMMessage.Direct.SEND) {

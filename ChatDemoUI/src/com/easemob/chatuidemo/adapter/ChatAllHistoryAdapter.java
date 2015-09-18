@@ -44,10 +44,12 @@ import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.domain.RobotUser;
+import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.utils.DateUtils;
 import com.easemob.chatuidemo.utils.SmileUtils;
 import com.easemob.chatuidemo.utils.UserUtils;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
 
 /**
@@ -279,7 +281,9 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 					}
 
 					// First match against the whole ,non-splitted value
-					if (username.startsWith(prefixString)) {
+					//SKYMODIFY filter 
+					User user = SkyUserUtils.getUser(username);
+					if(SkyUserManager.getInstances().isFilterUser(user,prefixString)){
 						newValues.add(value);
 					} else{
 						  final String[] words = username.split(" ");

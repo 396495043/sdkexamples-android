@@ -565,8 +565,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	
 	protected void onChatRoomViewCreation(){
         findViewById(R.id.container_to_group).setVisibility(View.GONE);
-        
-        final ProgressDialog pd = ProgressDialog.show(this, "", "Joining......");
+        //SKYMODIFY
+        final ProgressDialog pd = ProgressDialog.show(this, "", getResources().getString(R.string.joinDialog));
         EMChatManager.getInstance().joinChatRoom(toChatUsername, new EMValueCallBack<EMChatRoom>() {
         
         @Override

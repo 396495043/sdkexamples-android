@@ -209,7 +209,7 @@ public class SkyUserManager {
 		User user = DemoApplication.getInstance().getContactList()
 				.get(userName);
 		if (user == null) {
-			Log.e(TAG, userName
+			Log.w(TAG, userName
 					+ " not find user in contact list ,create new user ");
 			user = getNewUser(userName);
 		}
@@ -224,7 +224,9 @@ public class SkyUserManager {
 	}
 
 	private User getNewUser(String userName) {
-		return new User(userName);
+		User user = new User(userName);
+		user.setNick(userName);
+		return user;
 	}
 
 	public void getExtendValue(Cursor cursor, User user) {
