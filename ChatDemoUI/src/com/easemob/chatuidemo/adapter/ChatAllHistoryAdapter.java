@@ -49,6 +49,7 @@ import com.easemob.chatuidemo.utils.DateUtils;
 import com.easemob.chatuidemo.utils.SmileUtils;
 import com.easemob.chatuidemo.utils.UserUtils;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
 
@@ -156,7 +157,7 @@ public class ChatAllHistoryAdapter extends ArrayAdapter<EMConversation> {
 				holder.msgState.setVisibility(View.GONE);
 			}
 		}
-
+		SkyProductManager.getInstances().showAtMessageAtHistory(conversation, holder.name);
 		return convertView;
 	}
 

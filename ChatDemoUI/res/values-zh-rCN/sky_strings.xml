@@ -47,4 +47,5 @@
     <string name="refreshAllContactToast">正在后台刷新所有用户信息</string>
     <string name="getMeetingInfoError">取会议信息错误</string>
     <string name="joinDialog">连接中。。。。。。</string>
+    <string name="atMessage">提到了你</string>
 </resources>

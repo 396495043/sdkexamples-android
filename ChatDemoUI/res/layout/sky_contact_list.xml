@@ -30,7 +30,7 @@
         android:divider="#19000000"
         android:dividerHeight="4dp"
         android:fadingEdge="none"
-        android:fastScrollEnabled="false"
+        android:fastScrollEnabled="true"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true" />

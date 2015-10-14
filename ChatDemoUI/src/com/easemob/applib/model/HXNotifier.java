@@ -34,6 +34,7 @@ import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMMessage;
 import com.easemob.util.EMLog;
 import com.easemob.util.EasyUtils;
+import com.skytech.chatim.proxy.SkyProductManager;
 
 /**
  * 新消息提醒class
@@ -267,6 +268,7 @@ public class HXNotifier {
             mBuilder.setContentText(summaryBody);
             mBuilder.setContentIntent(pendingIntent);
             // mBuilder.setNumber(notificationNum);
+            SkyProductManager.getInstances().showAtMessageAtNotify(mBuilder ,message,contentTitle,notifyText,summaryBody) ;
             Notification notification = mBuilder.build();
 
             if (isForeground) {

@@ -68,10 +68,10 @@
                 android:text="科天网站  http://www.ketianyun.com/" />
              
              <TextView
-               android:id="@+id/tv_about"
+               android:id="@+id/tv_contact"
                style="@style/sky_text_value_style"
                android:autoLink="all"
-               android:text="有问题,您可以联系zhongqi.chen@tcl.com，电话  13382413897,也可以直接用科天云通讯联系，邮箱即帐号。" />
+               android:text="有问题,您可以联系zhongqi.chen@tcl.com，电话  13382413897,也可以直接用科天云通讯联系，邮箱即帐号。\n还可以在有道系统上报bug\n http://10.10.10.10/zentao/" />
         </LinearLayout>
     </LinearLayout>
 

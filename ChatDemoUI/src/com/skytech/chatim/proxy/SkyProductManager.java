@@ -2,6 +2,8 @@ package com.skytech.chatim.proxy;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -10,6 +12,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
@@ -18,7 +22,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.easemob.chat.EMConversation;
+import com.easemob.chat.EMMessage;
 import com.easemob.chatuidemo.R;
+import com.easemob.exceptions.EaseMobException;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.sky.util.DataUtil;
@@ -36,6 +43,8 @@ import com.skytech.chatim.sky.xmlapi.WebexAPIConstant;
 
 public class SkyProductManager {
     static final String SKYMK = "?SKYMK=";
+	public static final String AT_USER_LIST ="AT_USER_LIST" ;
+	public static final String AT_FROM ="AT_FROM" ;
     private static String TAG = SkyProductManager.class.getSimpleName();
     private static SkyProductManager instantce = new SkyProductManager() ;
 
@@ -202,6 +211,83 @@ public class SkyProductManager {
         return false ;
         
     }
+
+	public void checkAtMessage(Set<String> atUserSet, EMMessage message, String content) {
+		if (atUserSet!=null && atUserSet.size() > 0){
+			Log.d(TAG,atUserSet.toString());
+			String userNameList ="" ;
+			for (Iterator<String> iterator = atUserSet.iterator(); iterator.hasNext();) {
+				String name = (String) iterator.next();
+				String nickName = SkyUserUtils.getNickName(name);
+				if (content.indexOf("@"+nickName) >= 0){
+					userNameList += name +",";
+				}
+			} 
+			userNameList = userNameList.substring(0,userNameList.length()-1);
+			message.setAttribute(AT_USER_LIST, userNameList);
+			message.setAttribute(AT_FROM, SkyUserManager.getInstances().getUserName());
+			atUserSet.clear();
+		}
+	}
+
+	public void showAtMessageAtNotify(Builder mBuilder, EMMessage message, String contentTitle, String ticker, String contentText) {
+		try {
+		String atMessage =	getAtMessage(message);
+		if (atMessage!=null){
+			mBuilder.setContentTitle(atMessage + " " +  contentTitle);
+			mBuilder.setTicker(atMessage + " " +  ticker);
+			mBuilder.setContentText("["+atMessage + "]" +  contentText);
+		}
+		} catch (EaseMobException e) {
+			Log.e(TAG, "showAtMessageAtNotify ",e);
+		}
+		
+	}
+
+	private String getAtMessage(EMMessage message) throws EaseMobException {
+		String atFrom;
+		try {
+			atFrom = message.getStringAttribute(AT_FROM);
+		} catch (Exception e) {
+				return null ;
+		}
+		if (atFrom != null){
+			String userNameList = message.getStringAttribute(AT_USER_LIST);
+			String [] userArray = userNameList.split(",");
+			for (int i = 0; i < userArray.length; i++) {
+				if (SkyUserManager.getInstances().getUserName().equals(userArray[i])){
+					String nickName = SkyUserUtils.getNickName(atFrom);
+					String atMessage = nickName +  SkyUtil.getResStr(R.string.atMessage);
+					Log.d(TAG," get atMessage " + atMessage);
+					return atMessage ;
+				}
+			}
+		}
+		return null ;
+	}
+
+	public void showAtMessageAtHistory(EMConversation conversation,
+			TextView nameTextView) {
+		try {
+			if (conversation.getIsGroup()){
+				int count = conversation.getUnreadMsgCount();
+				for (int i = 0; i < count; i++) {
+					EMMessage message = conversation.getMessage(i);
+					if (message.getType() == EMMessage.Type.TXT){
+						String atMessage =	getAtMessage(message);
+						if (atMessage != null){
+							String html1 =nameTextView.getText() + "<font color=\"#ff0000\" >["+atMessage+ "]</font>";  
+							nameTextView.setText(Html.fromHtml(html1));
+							break ;
+						}
+					}
+				}
+			}
+		} catch (EaseMobException e) {
+			Log.e(TAG, "showAtMessageAtHistory ",e);
+		}
+		
+	}
     
 
 }

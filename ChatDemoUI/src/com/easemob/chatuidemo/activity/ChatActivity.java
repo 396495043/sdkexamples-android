@@ -18,8 +18,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -112,6 +114,7 @@ import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
 import com.skytech.chatim.sky.util.DataUtil;
 import com.skytech.chatim.ui.ContactInfoActivity;
+import com.skytech.chatim.ui.ContactListActivity;
 
 /**
  * 聊天页面
@@ -142,7 +145,9 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public static final int REQUEST_CODE_SELECT_VIDEO = 23;
 	public static final int REQUEST_CODE_SELECT_FILE = 24;
 	public static final int REQUEST_CODE_ADD_TO_BLACKLIST = 25;
-
+	//SKYMODIFY
+	public static final int REQUEST_CODE_SKY_GROUP_AT_LIST = 101;
+	
 	public static final int RESULT_CODE_COPY = 1;
 	public static final int RESULT_CODE_DELETE = 2;
 	public static final int RESULT_CODE_FORWARD = 3;
@@ -197,6 +202,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	private boolean haveMoreData = true;
 	private Button btnMore;
 	public String playMsgId;
+	public int startAt ;
 
 	private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -210,6 +216,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 	public EMGroup group;
 	public EMChatRoom room;
 	public boolean isRobot;
+	public Set<String> atUserSet = new HashSet <String>();
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -340,6 +348,14 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 				} else {
 					btnMore.setVisibility(View.VISIBLE);
 					buttonSend.setVisibility(View.GONE);
+				}
+				//SKYMODIFY
+				if (chatType == CHATTYPE_GROUP ){
+					if (count == 1 && before ==0 && s.charAt(start) == '@'   ){
+						Log.d(TAG,"onTextChanged " + s + " start "+ start +  " before "+ before + " count "+ count  );
+						startAt = start ;
+						ContactListActivity.showGroupAtList(ChatActivity.this,REQUEST_CODE_SKY_GROUP_AT_LIST,toChatUsername);
+					}
 				}
 			}
 
@@ -733,12 +749,23 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			} else if (requestCode == REQUEST_CODE_ADD_TO_BLACKLIST) { // 移入黑名单
 				EMMessage deleteMsg = (EMMessage) adapter.getItem(data.getIntExtra("position", -1));
 				addUserToBlacklist(deleteMsg.getFrom());
+			} else if (requestCode == REQUEST_CODE_SKY_GROUP_AT_LIST)  {  // SKYMODIFY
+				String userName = data.getStringExtra(ContactListActivity.USER_ID);
+				//Log.d(TAG," REQUEST_CODE_SKY_GROUP_AT_LIST " +mEditTextContent.getText() );
+				String nickName = SkyUserUtils.getNickName(userName);
+				String oldText = mEditTextContent.getText().toString() ;
+				int start = startAt + 1 ;
+				String newText = oldText.substring(0,start) + nickName + oldText.substring(start);
+				mEditTextContent.setText(newText);	
+				//Log.d(TAG," REQUEST_CODE_SKY_GROUP_AT_LIST " +mEditTextContent.getText() );
+				atUserSet.add(userName);				
 			} else if (conversation.getMsgCount() > 0) {
 				adapter.refresh();
 				setResult(RESULT_OK);
 			} else if (requestCode == REQUEST_CODE_GROUP_DETAIL) {
 				adapter.refresh();
-			}
+
+			} 
 		}
 	}
 
@@ -974,6 +1001,7 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 			// 设置要发给谁,用户username或者群聊groupid
 			message.setReceipt(toChatUsername);
 			// 把messgage加到conversation中
+			SkyProductManager.getInstances().checkAtMessage(atUserSet,message,content); //SKYMODIFY
 			conversation.addMessage(message);
 			// 通知adapter有消息变动，adapter会根据加入的这条message显示消息和调用sdk的发送方法
 			adapter.refreshSelectLast();
@@ -983,6 +1011,8 @@ public class ChatActivity extends BaseActivity implements OnClickListener, EMEve
 
 		}
 	}
+
+
 
 	/**
 	 * 发送语音

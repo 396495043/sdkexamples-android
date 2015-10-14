@@ -2,7 +2,9 @@ package com.skytech.chatim.proxy;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 
+import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.activity.AlertDialog;
 
 public class SkyUtil {
@@ -16,4 +18,11 @@ public class SkyUtil {
 	    
 	}
 
+	public static Resources getResources() {
+		return DemoApplication.applicationContext.getResources();
+	}
+
+	public static String getResStr(int id) {
+		return getResources().getString(id);
+	}
 }

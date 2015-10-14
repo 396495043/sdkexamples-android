@@ -66,22 +66,25 @@ public class HxManager {
 				EMGroup emGroup = (EMGroup) iterator2.next();
 				contactList.add(getContactUser(emGroup ));
 			}
-			// 排序
-			Collections.sort(contactList, new Comparator<ContactUser>() {
-
-				@Override
-				public int compare(ContactUser lhs, ContactUser rhs) {
-				if (lhs.getType() == rhs.getType()) {
-					return lhs.getNickName().compareTo(rhs.getNickName());
-				} else {
-					return lhs.getType() - rhs.getType();
-				}
-				}
-			});
-			
+			sort(contactList);
 			return contactList ;
 
 
+	}
+
+	private void sort(ArrayList<ContactUser> contactList) {
+		// 排序
+		Collections.sort(contactList, new Comparator<ContactUser>() {
+
+			@Override
+			public int compare(ContactUser lhs, ContactUser rhs) {
+			if (lhs.getType() == rhs.getType()) {
+				return lhs.getNickName().compareTo(rhs.getNickName());
+			} else {
+				return lhs.getType() - rhs.getType();
+			}
+			}
+		});
 	}
 
 	private ContactUser getContactUser(EMGroup emGroup) {
@@ -90,6 +93,23 @@ public class HxManager {
 
 	private ContactUser getContactUser(User user  ) {
 		return new ContactUser(user.getNick(),user.getUsername(),user.getAvatar(),ContactUser.CONTACT_TYPE);
+	}
+
+
+
+	public ArrayList<ContactUser> getGroupList(EMGroup group) {
+		List<String> list = group.getMembers();
+		ArrayList<ContactUser> contactList = new ArrayList<ContactUser>();
+		Iterator<String> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			String userName = iterator.next();
+			if (!userName.equals(SkyUserManager.getInstances().getUserName())){
+				User user = SkyUserUtils.getUser(userName);
+				contactList.add(getContactUser(user));
+			}
+		}
+		sort(contactList);
+		return contactList;
 	}
 
 }
