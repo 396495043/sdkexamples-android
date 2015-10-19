@@ -3,9 +3,11 @@ package com.skytech.chatim.proxy;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.activity.AlertDialog;
+import com.umeng.analytics.MobclickAgent;
 
 public class SkyUtil {
     public static boolean isOriginal() {
@@ -24,5 +26,9 @@ public class SkyUtil {
 
 	public static String getResStr(int id) {
 		return getResources().getString(id);
+	}
+
+	public static void logUserAndModel(Activity activity, String username) {
+		MobclickAgent.onEvent(activity, "userDevice",username+"--"+Build.MODEL);
 	}
 }

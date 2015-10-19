@@ -39,7 +39,6 @@ import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMContactManager;
 import com.easemob.chat.EMGroupManager;
-import com.easemob.chatuidemo.BuildConfig;
 import com.easemob.chatuidemo.Constant;
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.DemoHXSDKHelper;
@@ -213,6 +212,7 @@ public class LoginActivity extends BaseActivity {
 				DemoApplication.getInstance().setPassword(hxPassword);
              	//SKYMODIFY
  				SkyUserManager.getInstances().saveAccount(currentUsername,currentPassword);
+ 				SkyUtil.logUserAndModel(LoginActivity.this,currentUsername);
 				try {
 					// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
 					// ** manually load all local groups and
