@@ -97,7 +97,7 @@ public class HxManager {
 
 
 
-	public ArrayList<ContactUser> getGroupList(EMGroup group) {
+	public ArrayList<ContactUser> getGroupUserList(EMGroup group) {
 		List<String> list = group.getMembers();
 		ArrayList<ContactUser> contactList = new ArrayList<ContactUser>();
 		Iterator<String> iterator = list.iterator();
