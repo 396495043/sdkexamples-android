@@ -172,7 +172,9 @@ public class LoginActivity extends BaseActivity {
 		//SKYMODIFY two step login ,you need login sky first ,then you get hx userID to login hx .
 		final ServerInterface serverInterface = RetrofitClient.getServerInterface();
 		 Log.d(TAG," login  currentUsername " + currentUsername) ;
-		serverInterface.loginEasemob(currentUsername, currentPassword, new Callback<LoginEasemobResponse>(){
+		 String device = SkyUtil.getDevice();
+		 Log.e(TAG," device " + device ) ;
+		serverInterface.loginEasemob(currentUsername, currentPassword,device, new Callback<LoginEasemobResponse>(){
 
             @Override
             public void failure(RetrofitError error) {
