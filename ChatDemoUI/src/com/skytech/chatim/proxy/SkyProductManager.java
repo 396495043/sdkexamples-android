@@ -165,10 +165,14 @@ public class SkyProductManager {
         Callback<MeetingLinkResponse> callback = new Callback<MeetingLinkResponse>() {
 		    @Override
 		    public void failure(RetrofitError error) {
-		        Log.e(TAG, " getMeetingLink  error" + error
-		                + " getBody " + error.getBody());
-		        AndroidUtil.closeDialog(pd);
-		        AndroidUtil.showToast(activity, R.string.getMeetingInfoError);
+		        try {
+					Log.e(TAG, " getMeetingLink  error" + error);
+					AndroidUtil.closeDialog(pd);
+					AndroidUtil.showToast(activity, R.string.getMeetingInfoError);
+				} catch (Exception e) {
+					// 保护 ，实际上不应该 有exception 在这里 catch 住。
+					Log.e(TAG, " Callback<MeetingLinkResponse> failure ",e);
+				}
 		    }
 
 		    @Override
