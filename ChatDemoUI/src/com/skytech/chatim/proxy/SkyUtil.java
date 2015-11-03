@@ -12,14 +12,14 @@ import com.easemob.chatuidemo.activity.AlertDialog;
 import com.umeng.analytics.MobclickAgent;
 
 public class SkyUtil {
+	public static final int AlertDialogRequest = 55 ;
     public static boolean isOriginal() {
         return false;
     }
 
 	public static void showDialog(Activity activity,
 	        String msg) {
-	    activity.startActivity(new Intent(activity, AlertDialog.class).putExtra("msg", msg));
-	    
+	    activity.startActivityForResult(new Intent(activity, AlertDialog.class).putExtra("msg", msg),AlertDialogRequest);
 	}
 
 	public static Resources getResources() {

@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -353,8 +354,22 @@ public class LoginActivity extends BaseActivity {
 	 */
 	public void register(View view) {
 	    //SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。科天的每个员工已经预注册了用户。\n用户名，邮箱@前的字符串，比如张军，jun.z，密码Pass1234");
-	    SkyUtil.showDialog(this, "目前CI功能还没有完成，尚不能注册。请用已经分配的科天云帐号直接登陆");
+	    SkyUtil.showDialog(this, "请在打开的科天云网页上注册科天云帐号，然后用注册成功的帐号登录\n如果已有科天云帐号，可以直接登录");
 		//startActivityForResult(new Intent(this, RegisterActivity.class), 0);
+	}
+
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode ==  SkyUtil.AlertDialogRequest){
+			String text = "http://www.ketianyun.com/pdttryentra#_48_INSTANCE_YIey71583LWc_%3Dregister-submit.jsp";
+			 Uri  uri = Uri.parse(text);
+			   Intent  intent = new  Intent(Intent.ACTION_VIEW, uri);
+			   startActivity(intent);
+		}
 	}
 
 	@Override
