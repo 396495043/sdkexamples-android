@@ -55,6 +55,7 @@ import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.sky.util.DataUtil;
 import com.skytech.chatim.sky.vo.LoginEasemobResponse;
+import com.umeng.update.UmengUpdateAgent;
 
 /**
  * 登陆页面
@@ -119,7 +120,9 @@ public class LoginActivity extends BaseActivity {
 		    currentUsername = usernameEditText.getText().toString().trim();
 	        currentPassword = passwordEditText.getText().toString().trim();
 	        if (!TextUtils.isEmpty(currentUsername) && !TextUtils.isEmpty(currentPassword) ){
-	            login(null); 
+	        	if (!SkyUtil.backPress){
+	        		login(null); 
+	        	}
 	        }else{
 	        	if ( AndroidUtil.isTestService(this)){
 		        	//usernameEditText.setText("zhongqi.chen");
@@ -128,6 +131,13 @@ public class LoginActivity extends BaseActivity {
 		    		passwordEditText.setText(DataUtil.Pass4);
 	        	}
 	        }
+		}
+		
+		if (SkyUtil.backPress){
+			//SKYMODIFY
+			UmengUpdateAgent.setUpdateOnlyWifi(false);
+			UmengUpdateAgent.setDeltaUpdate(false);		
+		    UmengUpdateAgent.update(this);
 		}
 
 	}
@@ -138,6 +148,7 @@ public class LoginActivity extends BaseActivity {
 	 * @param view
 	 */
 	public void login(View view) {
+		SkyUtil.backPress =false;
 		if (!CommonUtils.isNetWorkConnected(this)) {
 			Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
 			return;
@@ -166,8 +177,6 @@ public class LoginActivity extends BaseActivity {
 		});
 		pd.setMessage(getString(R.string.Is_landing));
 		pd.show();
-
-		final long start = System.currentTimeMillis();
 
 
 		//SKYMODIFY two step login ,you need login sky first ,then you get hx userID to login hx .
@@ -210,6 +219,9 @@ public class LoginActivity extends BaseActivity {
 				if (!progressShow) {
 					return;
 				}
+				if (SkyUtil.backPress){
+					return ;
+				}
 				// 登陆成功，保存用户名密码
 				DemoApplication.getInstance().setUserName(hxUserName);
 				DemoApplication.getInstance().setPassword(hxPassword);
@@ -248,8 +260,9 @@ public class LoginActivity extends BaseActivity {
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
 				startActivity(intent);
-				
-				finish();
+				if (!SkyUtil.backPress){
+					finish();
+				}
 			}
 
 			@Override
@@ -358,6 +371,10 @@ public class LoginActivity extends BaseActivity {
 		//startActivityForResult(new Intent(this, RegisterActivity.class), 0);
 	}
 
+	@Override
+	public void onBackPressed() {
+		SkyUtil.backPress = true ;
+	}
 	
 	
 	@Override

@@ -15,6 +15,7 @@ import com.easemob.chatuidemo.DemoHXSDKHelper;
 import com.easemob.chatuidemo.R;
 import com.skytech.chatim.proxy.DebugTool;
 import com.skytech.chatim.proxy.SkyUserManager;
+import com.skytech.chatim.proxy.SkyUtil;
 import com.skytech.chatim.sky.util.DataUtil;
 
 /**
@@ -81,6 +82,11 @@ public class SplashActivity extends BaseActivity {
 			}
 		}).start();
 
+	}
+	
+	@Override
+	public void onBackPressed() {
+		SkyUtil.backPress = true ;
 	}
 	
 	/**

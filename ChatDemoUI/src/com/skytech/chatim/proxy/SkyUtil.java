@@ -13,6 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 
 public class SkyUtil {
 	public static final int AlertDialogRequest = 55 ;
+	public static boolean backPress; // 支持 back 键反自动登录
     public static boolean isOriginal() {
         return false;
     }

@@ -232,6 +232,25 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/btn_gray_normal" />
+            
+           <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    style="@style/sky_text_style"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/pmr_meeting" />
+
+                <TextView
+                    android:id="@+id/tv_pmr_meeting"
+                    style="@style/sky_text_value_style"
+                    android:layout_alignParentRight="true"
+                    android:autoLink="web"
+                    android:text="" />
+            </RelativeLayout>
+            
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

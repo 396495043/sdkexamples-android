@@ -6,13 +6,13 @@ import retrofit.client.Response;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
 import com.easemob.chatuidemo.domain.User;
@@ -23,7 +23,9 @@ import com.skytech.chatim.proxy.UserExtend;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.sky.util.DataUtil;
+import com.skytech.chatim.sky.vo.MeetingLinkResponse;
 import com.skytech.chatim.sky.vo.SkyUserResponse;
+import com.skytech.chatim.sky.vo.StartLinkPara;
 import com.squareup.picasso.Picasso;
 
 public class ContactInfoActivity extends BaseActivity {
@@ -67,6 +69,7 @@ public class ContactInfoActivity extends BaseActivity {
     
     private void setEditValue(int id,String value) {
     	TextView text =	(TextView) findViewById(id);
+    	text.setTextIsSelectable(true);
     	text.setText(value);
 	}
 
@@ -92,9 +95,46 @@ public class ContactInfoActivity extends BaseActivity {
                 SkyUserUtils.setUserInfo(ContactInfoActivity.this, userName, skyUserResponse.getResult());
                 User user = SkyUserManager.getInstances().getUser(userName);
                 showData(user);
-                AndroidUtil.closeDialog(progressDialog);
+                getStartLink();
             }
         });
     }
 
+	private void getStartLink() {
+        final ServerInterface serverInterface = RetrofitClient
+                .getServerInterface();
+        Callback<MeetingLinkResponse> callback = new Callback<MeetingLinkResponse>() {
+		    @Override
+		    public void failure(RetrofitError error) {
+		        try {
+					Log.e(TAG, " getMeetingLink  error" + error);
+					AndroidUtil.closeDialog(progressDialog);
+					AndroidUtil.showToast(ContactInfoActivity.this, R.string.getMeetingInfoError);
+				} catch (Exception e) {
+					// 保护 ，实际上不应该 有exception 在这里 catch 住。
+					Log.e(TAG, " Callback<MeetingLinkResponse> failure ",e);
+				}
+		    }
+
+		    @Override
+		    public void success(MeetingLinkResponse response,
+		            Response arg1) {
+		        Log.d(TAG, " get MeetingLinkResponse " + response);
+		        AndroidUtil.closeDialog(progressDialog);
+		        Intent intent = new Intent(Intent.ACTION_VIEW);
+		        intent.setData(Uri.parse(response.getResult().getUrl()));
+		    	String pmrShowLink = response.getResult().getPersonalMeetingUrl();
+		    	String wbxLink = response.getResult().getUrl() ;
+		    	TextView text =	(TextView) findViewById(R.id.tv_pmr_meeting);
+		    	text.setTextIsSelectable(true);
+		    	String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ;    
+		    	text.setText(Html.fromHtml(html1));
+		    	AndroidUtil.closeDialog(progressDialog);
+		    }
+		};
+		String uid = SkyUserManager.getInstances().getSkyUser().getUid();
+		StartLinkPara linkPara = new StartLinkPara(uid, true);
+		serverInterface.getMeetingStartLink(linkPara, callback);
+		
+	}
 }
