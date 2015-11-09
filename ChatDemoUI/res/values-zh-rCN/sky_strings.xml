@@ -5,6 +5,10 @@
         <item>拍照</item>
         <item>图库</item>
     </string-array>
+    <string-array name="addNewUser">
+        <item>查找用户添加好友</item>
+        <item>从手机通讯录添加好友</item>
+    </string-array>
 
     <string name="userName">用户名</string>
     <string name="nickName">昵称</string>

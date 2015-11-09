@@ -62,6 +62,7 @@ import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.widget.Sidebar;
 import com.easemob.exceptions.EaseMobException;
 import com.easemob.util.EMLog;
+import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.ui.ContactInfoActivity;
 
 /**
@@ -229,6 +230,7 @@ public class ContactlistFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(getActivity(), AddContactActivity.class));
+				//SkyProductManager.getInstances().addNewUser(getActivity());
 			}
 		});
 		registerForContextMenu(listView);

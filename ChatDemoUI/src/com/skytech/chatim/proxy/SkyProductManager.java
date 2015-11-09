@@ -9,7 +9,10 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -20,11 +23,13 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.easemob.chat.EMConversation;
 import com.easemob.chat.EMMessage;
 import com.easemob.chatuidemo.R;
+import com.easemob.chatuidemo.activity.AddContactActivity;
 import com.easemob.exceptions.EaseMobException;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
@@ -236,13 +241,13 @@ public class SkyProductManager {
 
 	public void showAtMessageAtNotify(Builder mBuilder, EMMessage message, String contentTitle, String ticker, String contentText) {
 		try {
-		String atMessage =	getAtMessage(message);
-		if (atMessage!=null){
-			mBuilder.setContentTitle(atMessage + " " +  contentTitle);
-			mBuilder.setTicker(atMessage + " " +  ticker);
-			mBuilder.setContentText("["+atMessage + "]" +  contentText);
-		}
-		} catch (EaseMobException e) {
+			String atMessage =	getAtMessage(message);
+			if (atMessage!=null){
+				mBuilder.setContentTitle(atMessage + " " +  contentTitle);
+				mBuilder.setTicker(atMessage + " " +  ticker);
+				mBuilder.setContentText("["+atMessage + "]" +  contentText);
+			}
+		} catch (Exception e) {
 			Log.e(TAG, "showAtMessageAtNotify ",e);
 		}
 		
@@ -252,20 +257,20 @@ public class SkyProductManager {
 		String atFrom;
 		try {
 			atFrom = message.getStringAttribute(AT_FROM);
-		} catch (Exception e) {
-				return null ;
-		}
-		if (atFrom != null){
-			String userNameList = message.getStringAttribute(AT_USER_LIST);
-			String [] userArray = userNameList.split(",");
-			for (int i = 0; i < userArray.length; i++) {
-				if (SkyUserManager.getInstances().getUserName().equals(userArray[i])){
-					String nickName = SkyUserUtils.getNickName(atFrom);
-					String atMessage = nickName +  SkyUtil.getResStr(R.string.atMessage);
-					Log.d(TAG," get atMessage " + atMessage);
-					return atMessage ;
+			if (atFrom != null){
+				String userNameList = message.getStringAttribute(AT_USER_LIST);
+				String [] userArray = userNameList.split(",");
+				for (int i = 0; i < userArray.length; i++) {
+					if (SkyUserManager.getInstances().getUserName().equals(userArray[i])){
+						String nickName = SkyUserUtils.getNickName(atFrom);
+						String atMessage = nickName +  SkyUtil.getResStr(R.string.atMessage);
+						Log.d(TAG," get atMessage " + atMessage);
+						return atMessage ;
+					}
 				}
 			}
+		} catch (Exception e) {
+				Log.e(TAG, "getAtMessage ",e);
 		}
 		return null ;
 	}
@@ -287,11 +292,32 @@ public class SkyProductManager {
 					}
 				}
 			}
-		} catch (EaseMobException e) {
+		} catch (Exception e) {
 			Log.e(TAG, "showAtMessageAtHistory ",e);
 		}
 		
 	}
     
+	public void addNewUser(final Activity activity) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setItems(activity.getResources().getStringArray(R.array.header),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (which == 0) // 查找用户添加好友
+						{
+							activity.startActivity(new Intent(activity, AddContactActivity.class));
+						} else if (which == 1) // 从手机通讯录添加好友
+						{
+							activity.startActivity(new Intent(activity, AddContactActivity.class));
+
+						}
+					}
+				});
+		Dialog dialog = builder.create();
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.show();
+		
+	}
 
 }
