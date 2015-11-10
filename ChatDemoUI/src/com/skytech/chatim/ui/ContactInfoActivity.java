@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class ContactInfoActivity extends BaseActivity {
     private ImageView iv_header;
     private ProgressDialog progressDialog;
     private String userName;
+	private User user;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -42,7 +44,7 @@ public class ContactInfoActivity extends BaseActivity {
         ((TextView) findViewById(R.id.tv_username))
                 .setText(userName);
         progressDialog = AndroidUtil.getProgressDialog(this, null);
-        User user = SkyUserManager.getInstances().getUser(userName);
+        user = SkyUserManager.getInstances().getUser(userName);
         Log.d(TAG," userName "+ userName +" user "+ user );
         showData(user);
         progressDialog.show();
@@ -125,16 +127,34 @@ public class ContactInfoActivity extends BaseActivity {
 		        intent.setData(Uri.parse(response.getResult().getUrl()));
 		    	String pmrShowLink = response.getResult().getPersonalMeetingUrl();
 		    	String wbxLink = response.getResult().getUrl() ;
+		    	wbxLink = getJoinLink(wbxLink);
 		    	TextView text =	(TextView) findViewById(R.id.tv_pmr_meeting);
 		    	text.setTextIsSelectable(true);
+		    	//String html1 =  "<font color=\"#00008b\" >["+pmrShowLink+ "]</font>";  
 		    	String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ;    
 		    	text.setText(Html.fromHtml(html1));
+		    	setClickAction(ContactInfoActivity.this, text,wbxLink);
 		    	AndroidUtil.closeDialog(progressDialog);
 		    }
+
+			private void setClickAction(final Activity activity ,final TextView text, final String wbxLink) {
+				text.setOnClickListener(new View.OnClickListener() {				
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+				        intent.setData(Uri.parse(wbxLink));
+				        activity.startActivity(intent);
+					}
+				});
+			}
 		};
-		String uid = SkyUserManager.getInstances().getSkyUser().getUid();
-		StartLinkPara linkPara = new StartLinkPara(uid, true);
+		StartLinkPara linkPara = new StartLinkPara(user.getUsername(), true);
 		serverInterface.getMeetingStartLink(linkPara, callback);
 		
+	}
+	
+	private String getJoinLink(String wbxLink) {
+		int start = wbxLink.indexOf("&TK=");
+		return wbxLink.substring(0,start);
 	}
 }

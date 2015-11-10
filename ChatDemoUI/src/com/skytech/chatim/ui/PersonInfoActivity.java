@@ -11,6 +11,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedFile;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,18 +29,20 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
-import com.easemob.chatuidemo.domain.User;
 import com.skytech.chatim.proxy.RetrofitClient;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
 import com.skytech.chatim.sky.util.DataUtil;
+import com.skytech.chatim.sky.vo.MeetingLinkResponse;
 import com.skytech.chatim.sky.vo.SkyUser;
 import com.skytech.chatim.sky.vo.SkyUserResponse;
+import com.skytech.chatim.sky.vo.StartLinkPara;
 import com.skytech.chatim.sky.vo.UploadFile;
 import com.squareup.picasso.Picasso;
 
@@ -106,7 +110,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
                 SkyUserManager.getInstances().setSkyUserInfo(PersonInfoActivity.this, skyUserResponse.getResult());
                 SkyUser skyUser = SkyUserManager.getInstances().getSkyUser();
                 showData(skyUser);
-                AndroidUtil.closeDialog(progressDialog);
+                getStartLink();
             }
         });
     }
@@ -333,5 +337,58 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 	private String getEditValue(int id) {
 		EditText editText = (EditText) findViewById(id);
 		return editText.getText().toString();
+	}
+	
+	
+	private void getStartLink() {
+        final ServerInterface serverInterface = RetrofitClient
+                .getServerInterface();
+        Callback<MeetingLinkResponse> callback = new Callback<MeetingLinkResponse>() {
+		    @Override
+		    public void failure(RetrofitError error) {
+		        try {
+					Log.e(TAG, " getMeetingLink  error" + error);
+					AndroidUtil.closeDialog(progressDialog);
+					AndroidUtil.showToast(PersonInfoActivity.this, R.string.getMeetingInfoError);
+				} catch (Exception e) {
+					// 保护 ，实际上不应该 有exception 在这里 catch 住。
+					Log.e(TAG, " Callback<MeetingLinkResponse> failure ",e);
+				}
+		    }
+
+		    @Override
+		    public void success(MeetingLinkResponse response,
+		            Response arg1) {
+		        Log.d(TAG, " get MeetingLinkResponse " + response);
+		        AndroidUtil.closeDialog(progressDialog);
+		        Intent intent = new Intent(Intent.ACTION_VIEW);
+		        intent.setData(Uri.parse(response.getResult().getUrl()));
+		    	String pmrShowLink = response.getResult().getPersonalMeetingUrl();
+		    	String wbxLink = response.getResult().getUrl() ;
+		    	TextView text =	(TextView) findViewById(R.id.tv_pmr_meeting);
+		    	text.setTextIsSelectable(true);
+		    	//String html1 =  "<font color=\"#00008b\" >["+pmrShowLink+ "]</font>";  
+		    	String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ; 
+		    	text.setText(Html.fromHtml(html1));
+		    	setClickAction(PersonInfoActivity.this, text,wbxLink);
+		    	AndroidUtil.closeDialog(progressDialog);
+		    }
+		    
+		    
+			private void setClickAction(final Activity activity ,final TextView text, final String wbxLink) {
+				text.setOnClickListener(new View.OnClickListener() {				
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+				        intent.setData(Uri.parse(wbxLink));
+				        activity.startActivity(intent);
+					}
+				});
+			}
+		};
+		String uid = SkyUserManager.getInstances().getSkyUser().getUid();
+		StartLinkPara linkPara = new StartLinkPara(uid, true);
+		serverInterface.getMeetingStartLink(linkPara, callback);
+		
 	}
 }

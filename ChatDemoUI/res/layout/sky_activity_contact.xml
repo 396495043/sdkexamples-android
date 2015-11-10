@@ -247,10 +247,16 @@
                     android:id="@+id/tv_pmr_meeting"
                     style="@style/sky_text_value_style"
                     android:layout_alignParentRight="true"
-                    android:autoLink="web"
                     android:text="" />
             </RelativeLayout>
-            
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/btn_gray_normal" />
+           
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
