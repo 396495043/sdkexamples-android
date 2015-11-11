@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -130,15 +131,14 @@ public class ContactInfoActivity extends BaseActivity {
 		    	wbxLink = getJoinLink(wbxLink);
 		    	TextView text =	(TextView) findViewById(R.id.tv_pmr_meeting);
 		    	text.setTextIsSelectable(true);
-		    	//String html1 =  "<font color=\"#00008b\" >["+pmrShowLink+ "]</font>";  
-		    	String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ;    
-		    	text.setText(Html.fromHtml(html1));
-		    	setClickAction(ContactInfoActivity.this, text,wbxLink);
+		    	text.setText(pmrShowLink);
+		    	Button button = (Button) findViewById(R.id.btn_pmr_meeting);
+		    	setClickAction(ContactInfoActivity.this, button,wbxLink);
 		    	AndroidUtil.closeDialog(progressDialog);
 		    }
 
-			private void setClickAction(final Activity activity ,final TextView text, final String wbxLink) {
-				text.setOnClickListener(new View.OnClickListener() {				
+			private void setClickAction(final Activity activity ,final Button button, final String wbxLink) {
+				button.setOnClickListener(new View.OnClickListener() {				
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);

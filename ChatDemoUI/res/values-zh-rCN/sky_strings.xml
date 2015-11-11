@@ -52,5 +52,6 @@
     <string name="getMeetingInfoError">取会议信息错误</string>
     <string name="joinDialog">连接中。。。。。。</string>
     <string name="atMessage">提到了你</string>
-    <string name="pmr_meeting">个人会议室</string>
+    <string name="my_pmr_meeting">进入我的个人会议室</string>
+    <string name="other_pmr_meeting">进入他的个人会议室</string>
 </resources>

@@ -368,15 +368,16 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 		    	TextView text =	(TextView) findViewById(R.id.tv_pmr_meeting);
 		    	text.setTextIsSelectable(true);
 		    	//String html1 =  "<font color=\"#00008b\" >["+pmrShowLink+ "]</font>";  
-		    	String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ; 
-		    	text.setText(Html.fromHtml(html1));
-		    	setClickAction(PersonInfoActivity.this, text,wbxLink);
+		    	//String html1 = "<a href=\""+wbxLink +"\">"+pmrShowLink +"</a>" ; 
+		    	text.setText(pmrShowLink);
+		    	Button button = (Button) findViewById(R.id.btn_pmr_meeting);
+		    	setClickAction(PersonInfoActivity.this, button,wbxLink);
 		    	AndroidUtil.closeDialog(progressDialog);
 		    }
 		    
 		    
-			private void setClickAction(final Activity activity ,final TextView text, final String wbxLink) {
-				text.setOnClickListener(new View.OnClickListener() {				
+			private void setClickAction(final Activity activity ,final Button button, final String wbxLink) {
+				button.setOnClickListener(new View.OnClickListener() {				
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
