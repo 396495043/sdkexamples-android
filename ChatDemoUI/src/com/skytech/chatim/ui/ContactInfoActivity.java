@@ -8,7 +8,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +18,7 @@ import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
 import com.easemob.chatuidemo.domain.User;
 import com.skytech.chatim.proxy.RetrofitClient;
+import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
 import com.skytech.chatim.proxy.UserExtend;
@@ -143,7 +143,7 @@ public class ContactInfoActivity extends BaseActivity {
 					public void onClick(View v) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 				        intent.setData(Uri.parse(wbxLink));
-				        activity.startActivity(intent);
+				        activity.startActivityForResult(intent,SkyProductManager.WebexInvokeRequest);
 					}
 				});
 			}

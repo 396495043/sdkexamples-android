@@ -35,6 +35,7 @@ import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
 import com.skytech.chatim.proxy.RetrofitClient;
+import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
@@ -382,7 +383,7 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 					public void onClick(View v) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 				        intent.setData(Uri.parse(wbxLink));
-				        activity.startActivity(intent);
+				        activity.startActivityForResult(intent,SkyProductManager.WebexInvokeRequest);
 					}
 				});
 			}

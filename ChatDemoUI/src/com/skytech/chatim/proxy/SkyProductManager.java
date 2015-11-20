@@ -50,6 +50,7 @@ public class SkyProductManager {
     static final String SKYMK = "?SKYMK=";
 	public static final String AT_USER_LIST ="AT_USER_LIST" ;
 	public static final String AT_FROM ="AT_FROM" ;
+	public static final int WebexInvokeRequest =222 ;
     private static String TAG = SkyProductManager.class.getSimpleName();
     private static SkyProductManager instantce = new SkyProductManager() ;
 
@@ -187,7 +188,7 @@ public class SkyProductManager {
 		        AndroidUtil.closeDialog(pd);
 		        Intent intent = new Intent(Intent.ACTION_VIEW);
 		        intent.setData(Uri.parse(response.getResult().getUrl()));
-		        activity.startActivity(intent);
+		        activity.startActivityForResult(intent,WebexInvokeRequest);
 		        if (chatAction!=null){
 		        	chatAction.sendText(response.getResult());
 		        }
