@@ -42,6 +42,7 @@ import com.easemob.chatuidemo.DemoApplication;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.adapter.ChatAllHistoryAdapter;
 import com.easemob.chatuidemo.db.InviteMessgeDao;
+import com.skytech.chatim.proxy.TopManager;
 
 /**
  * 显示所有会话记录，比较简单的实现，更好的可能是把陌生人存入本地，这样取到的聊天记录是可控的
@@ -168,12 +169,21 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		// if(((AdapterContextMenuInfo)menuInfo).position > 0){ m,
-		getActivity().getMenuInflater().inflate(R.menu.delete_message, menu); 
+		//SKYMODIFY add top function
+		EMConversation selectCons = adapter.getItem(((AdapterContextMenuInfo) menuInfo).position);
+		if (TopManager.getInstances().isTop(selectCons)){
+			getActivity().getMenuInflater().inflate(R.menu.delete_message_n, menu); 
+		}else{
+			getActivity().getMenuInflater().inflate(R.menu.delete_message, menu); 
+		}
 		// }
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
+		if (dealTopMenu(item)){
+			return true;
+		}
 		boolean handled = false;
 		boolean deleteMessage = false;
 		if (item.getItemId() == R.id.delete_message) {
@@ -197,6 +207,25 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 		return handled ? true : super.onContextItemSelected(item);
 	}
 
+	private boolean dealTopMenu(MenuItem item) {
+		boolean handled = false;
+		EMConversation selectCons = adapter.getItem(((AdapterContextMenuInfo) item.getMenuInfo()).position);
+		if (item.getItemId() == R.id.setTop) {
+			TopManager.getInstances().setTop(selectCons ,true);
+			handled = true;
+		} else if (item.getItemId() == R.id.cancelTop) {
+			TopManager.getInstances().setTop(selectCons ,false);
+			handled = true;
+		}
+		if (handled){
+			conversationList.clear();
+			conversationList.addAll(loadConversationsWithRecentChat());
+			adapter = new ChatAllHistoryAdapter(getActivity(), 1, conversationList);
+			listView.setAdapter(adapter);
+		}
+		return handled;
+	}
+	
 	/**
 	 * 刷新页面
 	 */
@@ -243,8 +272,23 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 		for (Pair<Long, EMConversation> sortItem : sortList) {
 			list.add(sortItem.second);
 		}
+		list = sortByTop(list);		
 		return list;
 	}
+	
+	private List<EMConversation> sortByTop(List<EMConversation> list) {
+		List<EMConversation> newList = new ArrayList<EMConversation>();
+		List<EMConversation> topList = new ArrayList<EMConversation>();
+		for (EMConversation conversation: list) {
+			if (TopManager.getInstances().isTop(conversation)){
+				topList.add(conversation);
+				list.remove(conversation);
+			}
+		}
+		newList.addAll(topList);
+		newList.addAll(list);
+		return newList;
+	}	
 
 	/**
 	 * 根据最后一条消息的时间排序

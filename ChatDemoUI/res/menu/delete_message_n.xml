@@ -6,9 +6,8 @@
     <item
         android:id="@+id/delete_message"
         android:title="@string/delete_conversation_messages"/>
-    
-     <item
-        android:id="@+id/setTop"
-        android:title="@string/set_conversation_top"/> 
-    
+      
+      <item
+        android:id="@+id/cancelTop"
+        android:title="@string/cancel_conversation_top"/>   
 </menu>
