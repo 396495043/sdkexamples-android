@@ -18,7 +18,7 @@ public class TopManager {
 	public static TopManager getInstances() {
 		return instantce;
 	}
-	public HashMap<String,Boolean> mTopMap  = new HashMap<String,Boolean>(); 
+	public HashMap<String,Boolean> mTopMap ; 
 	private String  HashSetKey ="HashSet"  ;
 	private TopManager() {
 	}
@@ -38,7 +38,9 @@ public class TopManager {
 			mTopMap = (HashMap<String,Boolean>)DataUtil.readObject(context,HashSetKey);
 			if (mTopMap == null){
 				mTopMap = new HashMap<String,Boolean>();
+				Log.d(TAG,"mTopMap == null ");
 			}
+			Log.d(TAG,"getTopMap "+ mTopMap.size());
 		}
 		return mTopMap;
 	}
@@ -55,5 +57,6 @@ public class TopManager {
 		mTopMap = topMap ;
 		Context context = DemoApplication.getInstance();
 		DataUtil.writeObject(context,HashSetKey,topMap);
+		Log.d(TAG,"saveMap "+ mTopMap.size());
 	}
 }

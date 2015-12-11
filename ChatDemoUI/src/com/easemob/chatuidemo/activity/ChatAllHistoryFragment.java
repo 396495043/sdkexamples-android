@@ -279,14 +279,16 @@ public class ChatAllHistoryFragment extends Fragment implements View.OnClickList
 	private List<EMConversation> sortByTop(List<EMConversation> list) {
 		List<EMConversation> newList = new ArrayList<EMConversation>();
 		List<EMConversation> topList = new ArrayList<EMConversation>();
+		List<EMConversation> unTopList = new ArrayList<EMConversation>();
 		for (EMConversation conversation: list) {
 			if (TopManager.getInstances().isTop(conversation)){
 				topList.add(conversation);
-				list.remove(conversation);
+			}else{
+				unTopList.add(conversation);
 			}
 		}
 		newList.addAll(topList);
-		newList.addAll(list);
+		newList.addAll(unTopList);
 		return newList;
 	}	
 
