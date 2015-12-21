@@ -17,12 +17,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -421,20 +415,11 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 		//分享文字
 		intent.setType("text/plain"); // 纯文本 
 		String text = getShareText();
-		// 分享图片
-//		SavePicture();
-//		File f = getPicFile() ; 
-//        if (f != null && f.exists() && f.isFile()) {  
-//            intent.setType("image/jpg");  
-//            Uri u = Uri.fromFile(f);  
-//            intent.putExtra(Intent.EXTRA_STREAM, u);  
-//        }  
         intent.putExtra(Intent.EXTRA_SUBJECT, "");  
         intent.putExtra(Intent.EXTRA_TEXT, text);  
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
         startActivity(Intent.createChooser(intent, ""));  
 	}
-	
 	
 	private String getShareText() {
 		StringBuffer sb = new StringBuffer();
@@ -448,54 +433,11 @@ public class PersonInfoActivity extends BaseActivity implements OnClickListener 
 		return sb.toString();
 	}
 
-	public void SavePicture() {
-
-		try {
-		File file = getPicFile() ; 
-		file.createNewFile();
-		FileOutputStream fos = new FileOutputStream(file);
-		Bitmap tempBitMap =getBitMap();
-		 tempBitMap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-		} catch (FileNotFoundException e) {
-		e.printStackTrace();
-		} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		}
-		}
-	
-	private File getPicFile() {
-		return  new File("/mnt/sdcard/temp.png");
-	}
-
-	private Bitmap getBitMap() {
-		int lineHeight = 100 ;
-		int line = 4 ;
-		int width = 200 ;
-				int height = lineHeight * line  ;
-		  Bitmap output = Bitmap.createBitmap(width,  
-				  height, Config.ARGB_8888);  
-	        Canvas canvas = new Canvas(output);                   
-	        final Paint paint = new Paint();  
-	        final Rect rect = new Rect(0, 0, width,  
-	        		height);          
-	        final RectF rectF = new RectF( rect);  
-	        final float roundPx = 14;  
-	        paint.setAntiAlias(true);  
-	        canvas.drawARGB(0, 0, 0, 0);  
-	        paint.setColor(Color.BLACK);  
-	        int x = 0 ;
-	        int y = height ;
-	        //canvas.drawRoundRect(rectF, roundPx, roundPx, paint);  
-	        canvas.drawText(getShareTextString(R.string.nickName,R.id.et_input_nickname), x, y, paint);
-	        canvas.drawText(getShareTextString(R.string.email,R.id.et_input_email), x, y-lineHeight, paint);
-	        canvas.drawText(getShareTextString(R.string.org,R.id.et_input_org), x, y-2*lineHeight, paint);
-	        return output;  
-	}
 
 	private String getShareTextString(int sid, int inputID) {
 		return getShareText(sid,inputID) + "\r\n";
 	}
+	
 	private String getShareText(int sid, int inputID) {
 		return SkyUtil.getFixWithString(getString(sid),4)+":" + getEditValue(inputID);
 	}
