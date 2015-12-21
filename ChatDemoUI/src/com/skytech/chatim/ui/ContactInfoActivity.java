@@ -21,6 +21,7 @@ import com.skytech.chatim.proxy.RetrofitClient;
 import com.skytech.chatim.proxy.SkyProductManager;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUserUtils;
+import com.skytech.chatim.proxy.SkyUtil;
 import com.skytech.chatim.proxy.UserExtend;
 import com.skytech.chatim.sky.retrofit.ServerInterface;
 import com.skytech.chatim.sky.util.AndroidUtil;
@@ -96,7 +97,7 @@ public class ContactInfoActivity extends BaseActivity {
             public void success(SkyUserResponse skyUserResponse, Response arg1) {
                 Log.d(TAG, " skyUser  " + skyUserResponse);
                 SkyUserUtils.setUserInfo(ContactInfoActivity.this, userName, skyUserResponse.getResult());
-                User user = SkyUserManager.getInstances().getUser(userName);
+                user = SkyUserManager.getInstances().getUser(userName);
                 showData(user);
                 getStartLink();
             }
@@ -134,6 +135,7 @@ public class ContactInfoActivity extends BaseActivity {
 		    	text.setText(pmrShowLink);
 		    	Button button = (Button) findViewById(R.id.btn_pmr_meeting);
 		    	setClickAction(ContactInfoActivity.this, button,wbxLink);
+		    	setShareAction();
 		    	AndroidUtil.closeDialog(progressDialog);
 		    }
 
@@ -156,5 +158,54 @@ public class ContactInfoActivity extends BaseActivity {
 	private String getJoinLink(String wbxLink) {
 		int start = wbxLink.indexOf("&TK=");
 		return wbxLink.substring(0,start);
+	}
+	
+	private void setShareAction() {
+		Button button = (Button)findViewById(R.id.btn_share);
+		button.setOnClickListener(new View.OnClickListener() {				
+			@Override
+			public void onClick(View v) {
+		        share();
+			}
+		});
+		
+	}
+	
+	private void share() {
+		//http://blog.csdn.net/loongggdroid/article/details/35572269
+		Intent intent = new Intent(Intent.ACTION_SEND);  
+		//分享文字
+		intent.setType("text/plain"); // 纯文本 
+		String text = getShareText();
+        intent.putExtra(Intent.EXTRA_SUBJECT, "");  
+        intent.putExtra(Intent.EXTRA_TEXT, text);  
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+        startActivity(Intent.createChooser(intent, ""));  
+	}
+	
+	
+	private String getShareText() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(getShareTextString(R.string.nickName,R.id.tv_nickname));
+		sb.append(getShareTextString(R.string.email,R.id.tv_email));
+		sb.append(getShareTextString(R.string.org,R.id.tv_org));
+		sb.append(getShareTextString(R.string.group,R.id.tv_group));
+		sb.append(getShareTextString(R.string.phone,R.id.tv_phone));
+		sb.append(getShareTextString(R.string.workPhone,R.id.tv_workPhone));
+		sb.setLength(sb.length()-2);
+		return sb.toString();
+	}
+
+
+	private String getShareTextString(int sid, int inputID) {
+		return getShareText(sid,inputID) + "\r\n";
+	}
+	private String getShareText(int sid, int inputID) {
+		return SkyUtil.getFixWithString(getString(sid),4)+":" + getEditValue(inputID);
+	}
+
+	private String getEditValue(int id) {
+		TextView text =	(TextView) findViewById(id);
+		return text.getText().toString();
 	}
 }

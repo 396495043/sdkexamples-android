@@ -40,4 +40,9 @@ public class SkyUtil {
 	public static String getDevice() {
 		return "A;"+ Build.MODEL+";"+Build.VERSION.SDK_INT;
 	}
+
+	public static String getFixWithString(String string, int i) {
+		string = string + "                      ";
+		return string.substring(0,i);
+	}
 }
