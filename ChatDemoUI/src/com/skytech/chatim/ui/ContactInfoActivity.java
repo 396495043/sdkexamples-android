@@ -99,7 +99,9 @@ public class ContactInfoActivity extends BaseActivity {
                 SkyUserUtils.setUserInfo(ContactInfoActivity.this, userName, skyUserResponse.getResult());
                 user = SkyUserManager.getInstances().getUser(userName);
                 showData(user);
-                getStartLink();
+                //getStartLink();
+                AndroidUtil.closeDialog(progressDialog);
+                setShareAction();
             }
         });
     }
