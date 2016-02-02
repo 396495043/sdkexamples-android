@@ -314,7 +314,28 @@
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="stateAlwaysHidden" >
          </activity>
-            
+         
+         <activity
+            android:name="com.skytech.chatim.ui.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+         </activity>
+         
+          <activity
+            android:name="com.skytech.chatim.ui.ShopActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+         </activity>   
+         
+         <activity
+            android:name="com.skytech.chatim.ui.SignInActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+         </activity>
+                   
          <activity
 		    android:name="com.skytech.chatim.ui.ContactListActivity"
 		    android:screenOrientation="portrait"
