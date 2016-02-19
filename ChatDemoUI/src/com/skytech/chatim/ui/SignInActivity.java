@@ -1,39 +1,45 @@
 package com.skytech.chatim.ui;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.CalendarView;
-import android.widget.CalendarView.OnDateChangeListener;
 
+import com.andexert.calendarlistview.library.DayPickerView;
+import com.andexert.calendarlistview.library.SimpleMonthAdapter;
 import com.easemob.chatuidemo.R;
 import com.easemob.chatuidemo.activity.BaseActivity;
 
-public class SignInActivity extends BaseActivity {
-    private static String TAG = SignInActivity.class.getSimpleName();
-	private CalendarView calendar;
+public class SignInActivity extends BaseActivity implements
+		com.andexert.calendarlistview.library.DatePickerController {
+	private static String TAG = ShopActivity.class.getSimpleName();
+	private DayPickerView dayPickerView;
 
-    @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
-        setContentView(R.layout.sky_signin);
- 
-        calendar = (CalendarView) findViewById(R.id.calendarView);  
-        Long nowTime = calendar.getDate();  
-        SimpleDateFormat f = new SimpleDateFormat("yyyy年MM月dd日hh:mm:ss");  
-        String time = f.format(nowTime);  
-        System.out.println("-------------" + time);  
-        calendar.setOnDateChangeListener(new OnDateChangeListener() {  
-            @Override  
-            public void onSelectedDayChange(CalendarView arg0, int arg1,  
-                    int arg2, int arg3) {  
-                arg2 = arg2 + 1;  
-                Log.d(TAG," CalendarView -------------" + arg1 + "-" + arg2 + "-"  
-                        + arg3);  
-            }  
-        });  
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.sky_signin);
+		dayPickerView = (DayPickerView) findViewById(R.id.calendarlistview);
+		dayPickerView.setController(this);
+		Log.d(TAG, "Day Selected ");
+	}
 
+	@Override
+	public int getMaxYear() {
+		 Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.YEAR);
+	}
 
+	@Override
+	public void onDayOfMonthSelected(int year, int month, int day) {
+		Log.d(TAG, "Day Selected " + day + " / " + month + " / " + year);
+	}
+
+	@Override
+	public void onDateRangeSelected(
+			SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays) {
+
+		Log.d(TAG, "Date range selected " + selectedDays.getFirst().toString()
+				+ " --> " + selectedDays.getLast().toString());
+	}
 }

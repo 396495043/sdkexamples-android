@@ -48,6 +48,7 @@ import com.easemob.chatuidemo.db.UserDao;
 import com.easemob.chatuidemo.domain.User;
 import com.easemob.chatuidemo.utils.CommonUtils;
 import com.easemob.exceptions.EaseMobException;
+import com.skytech.chatim.proxy.ContactManager;
 import com.skytech.chatim.proxy.RetrofitClient;
 import com.skytech.chatim.proxy.SkyUserManager;
 import com.skytech.chatim.proxy.SkyUtil;
@@ -197,6 +198,7 @@ public class LoginActivity extends BaseActivity {
             public void success(LoginEasemobResponse loginResponse , Response arg1) {
                 Log.d(TAG," login  loginResponse" + loginResponse ) ;
                 SkyUserManager.getInstances().setToken(loginResponse.getResult().getToken());
+                SkyUserManager.getInstances().setCiToken(loginResponse.getResult().getCiToken());
                 SkyUserManager.getInstances().setSkyUser(loginResponse.getResult());
                 hxUserName = loginResponse.getResult().getUid();
                 hxPassword =loginResponse.getResult().getPassword();
@@ -228,6 +230,7 @@ public class LoginActivity extends BaseActivity {
              	//SKYMODIFY
  				SkyUserManager.getInstances().saveAccount(currentUsername,currentPassword);
  				SkyUtil.logUserAndModel(LoginActivity.this,currentUsername);
+ 				ContactManager.getInstances().readContactOnBackgrond();
 				try {
 					// ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
 					// ** manually load all local groups and

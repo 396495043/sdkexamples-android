@@ -314,4 +314,15 @@ public class SkyUserManager {
 			user.setAvatar(dbUser.getAvatar());
 		}
 	}
+
+    private String ciToken;
+
+	public String getCiToken() {
+		return ciToken;
+	}
+
+	public void setCiToken(String ciToken) {
+		this.ciToken = ciToken;
+	}
+
 }

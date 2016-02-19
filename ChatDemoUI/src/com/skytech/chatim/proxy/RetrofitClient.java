@@ -10,7 +10,8 @@ import com.skytech.chatim.sky.retrofit.ServerInterface;
 
 public class RetrofitClient {
     public static String TAG = RetrofitClient.class.getSimpleName();
-    public static final String API_URL = "http://sky-techcloud.com";
+    //public static final String API_URL = "http://sky-techcloud.com";
+    public static final String API_URL = "http://10.10.10.190";
     private static ServerInterface serverInterface ;
     public static ServerInterface getServerInterface() {
         if (serverInterface != null){
